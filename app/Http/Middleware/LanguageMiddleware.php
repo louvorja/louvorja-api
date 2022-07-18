@@ -3,8 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Models\Language;
 
-class ExampleMiddleware
+class LanguageMiddleware
 {
     /**
      * Handle an incoming request.
@@ -15,6 +16,12 @@ class ExampleMiddleware
      */
     public function handle($request, Closure $next)
     {
+        list($lang) = explode("/",$request->path());
+
+        if (!Language::find($lang)){
+            return response()->json(['error'=>"Idioma '$lang' não encontrado."],401);
+        }
+
         return $next($request);
     }
 }
