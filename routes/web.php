@@ -16,6 +16,7 @@
 $router->get('/', function () {return [];});
 
 $router->group(['prefix' => '{lang}', 'middleware' => 'api'], function () use ($router) {
+    //index
     $router->get('/', function () {return [];});
     $router->get('/categories', 'CategoryController@index');
     $router->get('/categories_albums', 'CategoryAlbumController@index');
@@ -25,4 +26,8 @@ $router->group(['prefix' => '{lang}', 'middleware' => 'api'], function () use ($
     $router->get('/lyrics', 'LyricController@index');
 
     $router->get('/hymnal', 'HymnalController@index');
+
+    //show
+    $router->get('/musics/{id}', 'MusicController@show');
+    $router->get('/music/{id}', 'MusicController@show');
 });
