@@ -13,15 +13,16 @@
 |
  */
 
-$router->get('/', function () use ($router) {
-    return ["name"=>"API LouvorJA"];
-});
+$router->get('/', function () {return [];});
 
 $router->group(['prefix' => '{lang}', 'middleware' => 'api'], function () use ($router) {
+    $router->get('/', function () {return [];});
     $router->get('/categories', 'CategoryController@index');
     $router->get('/categories_albums', 'CategoryAlbumController@index');
     $router->get('/albums', 'AlbumController@index');
     $router->get('/albums_musics', 'AlbumMusicController@index');
     $router->get('/musics', 'MusicController@index');
     $router->get('/lyrics', 'LyricController@index');
+
+    $router->get('/hymnal', 'HymnalController@index');
 });
