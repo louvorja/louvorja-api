@@ -26,6 +26,8 @@ class LanguageMiddleware
             }
         }
 
+        // Armazena a verificação em cache, por 24 horas
+        // para não precisar repetir consulta no BD
         Cache::store('file')->put("lang_{$lang}", true, 60 * 60 * 24);
 
         return $next($request);
