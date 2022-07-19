@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Cache;
 use App\Models\Language;
 
 class LanguageMiddleware
@@ -18,9 +19,14 @@ class LanguageMiddleware
     {
         list($lang) = explode("/",$request->path());
 
-        if (!Language::find($lang)){
-            return response()->json(['error'=>"Idioma '$lang' não encontrado."],401);
+        if (Cache::store('file')->get("lang_{$lang}") != true){
+            error_log("*** Verifica parâmetro {lang = $lang} ***");
+            if (!Language::find($lang)){
+                return response()->json(['error'=>"Idioma '$lang' não encontrado."],401);
+            }
         }
+
+        Cache::store('file')->put("lang_{$lang}", true, 60 * 60 * 24);
 
         return $next($request);
     }

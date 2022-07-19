@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Cache;
 
 class CategoryController extends Controller
 {
@@ -15,6 +16,9 @@ class CategoryController extends Controller
     public function index($lang)
     {
         //return $lang;
+        //Cache::store('file')->put('foo', 'baz', 30);
+        //return Cache::store('file')->get('foo');
+
         return response()->json(Category::all());
     }
 
