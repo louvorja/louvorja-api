@@ -4,13 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class CategoryAlbum extends Model
 {
-    protected $primaryKey = 'id_category';
+    protected $table = 'categories_albums';
+    protected $primaryKey = ['id_category', 'id_album'];
+    public $incrementing = false;
     protected $fillable = [
         'id_category',
+        'id_album',
         'name',
-        'slug',
         'order',
         'id_language',
     ];

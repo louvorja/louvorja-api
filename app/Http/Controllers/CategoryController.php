@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Cache;
 
 class CategoryController extends Controller
 {
@@ -13,13 +12,11 @@ class CategoryController extends Controller
 
     }
 
-    public function index($lang)
+    public function index(Request $request)
     {
-        //return $lang;
-        //Cache::store('file')->put('foo', 'baz', 30);
-        //return Cache::store('file')->get('foo');
-
-        return response()->json(Category::all());
+        return response()->json(
+            Category::where('id_language', $request->id_language)->paginate($request->limit)
+        );
     }
 
     public function create(Request $request)
@@ -32,45 +29,23 @@ class CategoryController extends Controller
         //
     }
 
-    public function show(Room $room)
+    public function show(Category $category)
     {
         //
     }
 
-    public function edit(Room $room)
+    public function edit(Category $category)
     {
         //
     }
 
-    public function update(Request $request, Room $room)
+    public function update(Request $request, Category $category)
     {
         //
     }
 
-    public function destroy(Room $room)
+    public function destroy(Category $category)
     {
         //
     }
-/*
-public function findAll()
-{
-$token = JWT::sign([
-'uid' => 1,
-'email' => 'emaggil@email.com',
-'asd' => 'emaggil@AAADD',
-]);
-
-echo "<pre>";
-echo $token."\r\n";
-$result = JWT::verify($token);
-if (!$result){
-echo "<br>eeeeeee";
-}else{
-print_r($result);
-}
-
-print $token;
-// return response()->json(Room::all());
-}
- */
 }

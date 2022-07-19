@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Album;
+use App\Models\CategoryAlbum;
 use Illuminate\Http\Request;
 
-class AlbumController extends Controller
+class CategoryAlbumController extends Controller
 {
     public function __construct()
     {
@@ -15,7 +15,7 @@ class AlbumController extends Controller
     public function index(Request $request)
     {
         return response()->json(
-            Album::where('id_language', $request->id_language)->paginate($request->limit)
+            CategoryAlbum::where('id_language', $request->id_language)->paginate($request->limit)
         );
     }
 
@@ -29,22 +29,22 @@ class AlbumController extends Controller
         //
     }
 
-    public function show(Album $album)
+    public function show(CategoryAlbum $category_album)
     {
         //
     }
 
-    public function edit(Album $album)
+    public function edit(CategoryAlbum $category_album)
     {
         //
     }
 
-    public function update(Request $request, Album $album)
+    public function update(Request $request, CategoryAlbum $category_album)
     {
         //
     }
 
-    public function destroy(Album $album)
+    public function destroy(CategoryAlbum $category_album)
     {
         //
     }

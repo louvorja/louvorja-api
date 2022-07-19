@@ -73,11 +73,11 @@ $app->configure('app');
  */
 
 $app->middleware([
-    App\Http\Middleware\LanguageMiddleware::class,
+    App\Http\Middleware\ApiMiddleware::class,
 ]);
 
 $app->routeMiddleware([
-    'lang' => App\Http\Middleware\LanguageMiddleware::class,
+    'api' => App\Http\Middleware\ApiMiddleware::class,
 ]);
 
 /*
