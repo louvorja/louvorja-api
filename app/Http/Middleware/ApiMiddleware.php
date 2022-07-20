@@ -20,7 +20,7 @@ class apiMiddleware
         list($lang) = explode("/", $request->path());
 
         $cache = env('APP_CACHE', true);
-        error_log("APP_CACHE=".$cache);
+        //error_log("APP_CACHE=".$cache);
 
         if (!$request->header('Api-Token')){
             return response()->json(['error' => "Token de API não informado!"], 401);
@@ -31,7 +31,7 @@ class apiMiddleware
 
         if ($lang != "") {
             if (!$cache || Cache::store('file')->get("lang_{$lang}") != true) {
-                error_log("*** Localiza idioma ***");
+                //error_log("*** Localiza idioma ***");
                 if (!Language::find($lang)) {
                     return response()->json(['error' => "Idioma '$lang' não encontrado."], 401);
                 }
@@ -39,7 +39,7 @@ class apiMiddleware
                 if ($cache){
                     // Armazena a verificação em cache, por 24 horas
                     // para não precisar repetir consulta no BD
-                    error_log("*** Armazena em cache (lang_{$lang}) ***");
+                    //error_log("*** Armazena em cache (lang_{$lang}) ***");
                     Cache::store('file')->put("lang_{$lang}", true, 60 * 60 * 24);
                 }
             }
@@ -59,13 +59,13 @@ class apiMiddleware
             if ($cache){
                 // Armazena o resultado da requisição por 1 hora
                 // para não precisar repetir consulta no BD
-                error_log("*** Armazena em cache ({$key}) ***");
+                //error_log("*** Armazena em cache ({$key}) ***");
                 Cache::store('file')->put("{$key}", $response, 60 * 60 * 1);
             }
             
             return $response;
         }else{
-            error_log("*** Obter do cache ({$key}) ***");
+            //error_log("*** Obter do cache ({$key}) ***");
             return Cache::store('file')->get("{$key}");
         }
     }
