@@ -49,7 +49,6 @@ class apiMiddleware
         if ($request->limit <= 0){
             $request->limit = 999999;
         }
-        error_log($request->limit);
         $request->id_language = $lang;
 
         $key = preg_replace('/[^0-9a-zA-Z_]/', '',"req_".$request->getPathInfo().'_'.json_encode($request->all()));
