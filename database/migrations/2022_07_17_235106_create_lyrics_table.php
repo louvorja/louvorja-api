@@ -17,7 +17,7 @@ class CreateLyricsTable extends Migration
             $table->increments('id_lyric');
             $table->unsignedInteger('id_music');
             $table->string('lyric');
-            $table->string('image');
+            $table->unsignedInteger('id_file_image')->nullable();
             $table->time('time');
             $table->time('instrumental_time');
             $table->boolean('show_slide');
@@ -27,6 +27,7 @@ class CreateLyricsTable extends Migration
 
             $table->foreign('id_music')->references('id_music')->on('musics');
             $table->foreign('id_language')->references('id_language')->on('languages');
+            $table->foreign('id_file_image')->references('id_file')->on('files');
         });
     }
 

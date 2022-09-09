@@ -10,7 +10,7 @@ class Album extends Model
     protected $fillable = [
         'id_album',
         'name',
-        'image',
+        'id_file_image',
         'id_language',
     ];
 

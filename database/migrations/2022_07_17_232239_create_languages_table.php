@@ -18,6 +18,15 @@ class CreateLanguagesTable extends Migration
             $table->string('language')->nullable();
             $table->timestamps();
         });
+
+        DB::table('languages')->insert(
+            array(
+                'id_language' => 'pt',
+                'language' => 'Português',
+                'created_at' => date('Y-m-d H:i'),
+                'updated_at' => date('Y-m-d H:i'),
+            )
+        );
     }
 
     /**

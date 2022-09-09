@@ -16,11 +16,12 @@ class CreateAlbumsTable extends Migration
         Schema::create('albums', function (Blueprint $table) {
             $table->increments('id_album');
             $table->string('name')->nullable();
-            $table->string('image');
+            $table->unsignedInteger('id_file_image')->nullable();
             $table->string('id_language', 5);
             $table->timestamps();
 
             $table->foreign('id_language')->references('id_language')->on('languages');
+            $table->foreign('id_file_image')->references('id_file')->on('files');
         });
     }
 
