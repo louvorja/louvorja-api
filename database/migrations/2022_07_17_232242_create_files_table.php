@@ -15,16 +15,16 @@ class CreateFilesTable extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->increments('id_file');
-            $table->string('name');
+            $table->string('name',50);
             $table->string('type');
             $table->integer('size');
-            $table->string('base_url');
-            $table->string('subdirectory');
-            $table->string('file_name');
+            $table->string('base_url',100);
+            $table->string('subdirectory',100);
+            $table->string('file_name',50);
             $table->integer('version');
             $table->timestamps();
 
-            $table->unique('name');
+            $table->unique(['name','base_url','subdirectory','file_name']);
         });
     }
 
