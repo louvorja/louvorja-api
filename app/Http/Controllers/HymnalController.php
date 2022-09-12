@@ -24,6 +24,7 @@ class HymnalController extends Controller
                 ->leftJoin('files as files_music', 'musics.id_file_music', 'files_music.id_file')
                 ->leftJoin('files as files_instrumental_music', 'musics.id_file_instrumental_music', 'files_instrumental_music.id_file')
                 ->where('categories.slug', 'hymnal')
+                ->where('categories.id_language', $request->id_language)
                 ->select(
                     'musics.id_music',
                     'musics.name',
