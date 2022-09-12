@@ -22,6 +22,7 @@ class CreateCategoriesTable extends Migration
             $table->timestamps();
 
             $table->foreign('id_language')->references('id_language')->on('languages');
+            $table->unique(['slug', 'id_language']);
         });
     }
 

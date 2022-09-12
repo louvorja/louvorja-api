@@ -23,6 +23,8 @@ class CreateFilesTable extends Migration
             $table->string('file_name');
             $table->integer('version');
             $table->timestamps();
+
+            $table->unique('name');
         });
     }
 
