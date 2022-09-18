@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Data;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -14,9 +15,8 @@ class CategoryController extends Controller
 
     public function index(Request $request)
     {
-        return response()->json(
-            Category::where('id_language', $request->id_language)->paginate($request->limit)
-        );
+        $data = Category::where('id_language', $request->id_language);
+        return response()->json(Data::data($data, $request));
     }
 
     public function create(Request $request)

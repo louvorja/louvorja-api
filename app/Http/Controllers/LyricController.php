@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Data;
 use App\Models\Lyric;
 use Illuminate\Http\Request;
 
@@ -14,9 +15,8 @@ class LyricController extends Controller
 
     public function index(Request $request)
     {
-        return response()->json(
-            Lyric::where('id_language', $request->id_language)->paginate($request->limit)
-        );
+        $data = Lyric::where('id_language', $request->id_language);
+        return response()->json(Data::data($data, $request));
     }
 
     public function create(Request $request)

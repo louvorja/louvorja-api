@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Data;
 use App\Models\CategoryAlbum;
 use Illuminate\Http\Request;
 
@@ -14,9 +15,8 @@ class CategoryAlbumController extends Controller
 
     public function index(Request $request)
     {
-        return response()->json(
-            CategoryAlbum::where('id_language', $request->id_language)->paginate($request->limit)
-        );
+        $data = CategoryAlbum::where('id_language', $request->id_language);
+        return response()->json(Data::data($data, $request));
     }
 
     public function create(Request $request)
