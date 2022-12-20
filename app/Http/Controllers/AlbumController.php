@@ -16,7 +16,7 @@ class AlbumController extends Controller
 
     public function index(Request $request)
     {
-        $data = Album::where('id_language', $request->id_language)
+        $data = Album::where('albums.id_language', $request->id_language)
             ->leftJoin('files', 'albums.id_file_image', 'files.id_file')
             ->select(
                 'albums.id_album',
@@ -28,6 +28,17 @@ class AlbumController extends Controller
                 'albums.created_at',
                 'albums.updated_at',
             );
+
+        if (isset($request["categories_slug"])) {
+            $data = $data
+                ->leftJoin('categories_albums', 'categories_albums.id_album', 'albums.id_album')
+                ->leftJoin('categories', 'categories.id_category', 'categories_albums.id_category')
+                ->where('categories.slug', $request["categories_slug"]);
+        }
+
+        if (isset($request["with_categories"]) && $request["with_categories"] == 1) {
+            $data = $data->with('categories');
+        }
         return response()->json(Data::data($data, $request));
     }
 

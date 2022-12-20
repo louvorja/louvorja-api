@@ -37,6 +37,9 @@ class MusicController extends Controller
                 'musics.created_at',
                 'musics.updated_at',
             );
+        if (isset($request["with_albums"]) && $request["with_albums"] == 1) {
+            $data = $data->with('albums');
+        }
         return response()->json(Data::data($data, $request));
     }
 

@@ -18,4 +18,8 @@ class Music extends Model
         'id_language',
     ];
 
+    public function albums()
+    {
+        return $this->belongsToMany(Album::class, 'albums_musics', 'id_music', 'id_album')->withPivot('track');
+    }
 }
