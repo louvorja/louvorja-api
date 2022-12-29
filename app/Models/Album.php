@@ -12,6 +12,7 @@ class Album extends Model
         'name',
         'id_file_image',
         'id_language',
+        'color',
     ];
 
     public function categories()

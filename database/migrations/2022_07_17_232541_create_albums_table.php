@@ -18,6 +18,7 @@ class CreateAlbumsTable extends Migration
             $table->string('name')->nullable();
             $table->unsignedInteger('id_file_image')->nullable();
             $table->string('id_language', 5);
+            $table->string('color', 7);
             $table->timestamps();
 
             $table->foreign('id_language')->references('id_language')->on('languages');

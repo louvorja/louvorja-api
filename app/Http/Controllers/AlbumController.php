@@ -25,6 +25,9 @@ class AlbumController extends Controller
                 DB::raw('concat(files.base_url,files.subdirectory,files.file_name) as url_image'),
                 'files.version as image_version',
                 'albums.id_language',
+                'albums.color',
+                DB::raw((isset($request["categories_slug"]) ? 'categories_albums.name' : '""').' as subtitle'),
+                DB::raw((isset($request["categories_slug"]) ? 'categories_albums.order' : '""').' as `order`'),
                 'albums.created_at',
                 'albums.updated_at',
             );
