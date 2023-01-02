@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use Illuminate\Support\Facades\DB;
+
 class Data
 {
 
@@ -16,6 +18,12 @@ class Data
             }
         }
         return $data->paginate($request->limit);
+    }
+
+    public static function structure($table_name)
+    {
+        $columns = DB::select("SHOW COLUMNS FROM $table_name");
+        return ["columns" => $columns];
     }
 
 }

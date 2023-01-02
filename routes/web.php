@@ -16,18 +16,27 @@
 $router->get('/', function () {return [];});
 
 $router->group(['prefix' => '{lang}', 'middleware' => 'api'], function () use ($router) {
-    //index
+
     $router->get('/', function () {return [];});
-    $router->get('/categories', 'CategoryController@index');
-    $router->get('/categories_albums', 'CategoryAlbumController@index');
-    $router->get('/albums', 'AlbumController@index');
-    $router->get('/albums_musics', 'AlbumMusicController@index');
+
     $router->get('/musics', 'MusicController@index');
+    $router->get('/musics/{id}', 'MusicController@show');
+    $router->get('/music/{id}', 'MusicController@show');
+
+    $router->get('/categories', 'CategoryController@index');
+
+    $router->get('/categories_albums', 'CategoryAlbumController@index');
+
+    $router->get('/albums', 'AlbumController@index');
+    $router->get('/albums/create', 'AlbumController@create_table');
+    $router->get('/albums/{id}', 'AlbumController@show');
+    $router->get('/album/{id}', 'AlbumController@show');
+
+    $router->get('/albums_musics', 'AlbumMusicController@index');
+    
     $router->get('/lyrics', 'LyricController@index');
 
     $router->get('/hymnal', 'HymnalController@index');
 
-    //show
-    $router->get('/musics/{id}', 'MusicController@show');
-    $router->get('/music/{id}', 'MusicController@show');
+
 });
