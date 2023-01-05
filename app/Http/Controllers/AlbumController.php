@@ -30,19 +30,22 @@ class AlbumController extends Controller
             DB::raw((isset($request["categories_slug"]) ? 'categories_albums.order' : '""') . ' as `order`'),
             'albums.created_at',
             'albums.updated_at',
-        )->where('albums.id_language', $request->id_language)
+        )
+            ->where('albums.id_language', $request->id_language)
             ->leftJoin('files', 'albums.id_file_image', 'files.id_file');
 
         if (isset($request["categories_slug"])) {
+            $categories = explode(",", $request["categories_slug"]);
             $data = $data
                 ->leftJoin('categories_albums', 'categories_albums.id_album', 'albums.id_album')
                 ->leftJoin('categories', 'categories.id_category', 'categories_albums.id_category')
-                ->where('categories.slug', $request["categories_slug"]);
+                ->whereIn('categories.slug', $categories);
         }
 
         if (isset($request["with_categories"]) && $request["with_categories"] == 1) {
             $data = $data->with('categories');
         }
+        $data = $data->distinct();
         return response()->json(Data::data($data, $request, $model->getFillable()));
     }
 
