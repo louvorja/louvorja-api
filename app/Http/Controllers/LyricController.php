@@ -15,8 +15,9 @@ class LyricController extends Controller
 
     public function index(Request $request)
     {
-        $data = Lyric::where('id_language', $request->id_language);
-        return response()->json(Data::data($data, $request));
+        $model = new Lyric;
+        $data = $model->select()->where('id_language', $request->id_language);
+        return response()->json(Data::data($data, $request, $model->getFillable()));
     }
 
     public function create(Request $request)

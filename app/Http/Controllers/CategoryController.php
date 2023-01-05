@@ -15,8 +15,9 @@ class CategoryController extends Controller
 
     public function index(Request $request)
     {
-        $data = Category::where('id_language', $request->id_language);
-        return response()->json(Data::data($data, $request));
+        $model = new Category;
+        $data = $model->select()->where('id_language', $request->id_language);
+        return response()->json(Data::data($data, $request, $model->getFillable()));
     }
 
     public function create(Request $request)

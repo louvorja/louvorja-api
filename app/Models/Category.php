@@ -12,6 +12,7 @@ class Category extends Model
         'name',
         'slug',
         'order',
+        'type',
         'id_language',
     ];
 

@@ -18,6 +18,7 @@ class CreateCategoriesTable extends Migration
             $table->string('name')->nullable();
             $table->string('slug',20)->nullable();
             $table->integer('order');
+            $table->string('type',20)->nullable();
             $table->string('id_language', 5);
             $table->timestamps();
 

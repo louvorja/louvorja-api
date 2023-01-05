@@ -17,7 +17,8 @@ class MusicController extends Controller
 
     public function index(Request $request)
     {
-        $data = Music::where('id_language', $request->id_language)
+        $model = new Music;
+        $data = $model->select()->where('id_language', $request->id_language)
             ->leftJoin('files as files_image', 'musics.id_file_image', 'files_image.id_file')
             ->leftJoin('files as files_music', 'musics.id_file_music', 'files_music.id_file')
             ->leftJoin('files as files_instrumental_music', 'musics.id_file_instrumental_music', 'files_instrumental_music.id_file')
@@ -40,7 +41,7 @@ class MusicController extends Controller
         if (isset($request["with_albums"]) && $request["with_albums"] == 1) {
             $data = $data->with('albums');
         }
-        return response()->json(Data::data($data, $request));
+        return response()->json(Data::data($data, $request, $model->getFillable()));
     }
 
     public function create(Request $request)

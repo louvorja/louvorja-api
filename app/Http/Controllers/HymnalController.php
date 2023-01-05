@@ -16,7 +16,8 @@ class HymnalController extends Controller
 
     public function index(Request $request)
     {
-        $data = Music::where('musics.id_language', $request->id_language)
+        $model = new Music;
+        $data = $model->select()->where('musics.id_language', $request->id_language)
             ->join('albums_musics', 'albums_musics.id_music', 'musics.id_music')
             ->join('categories_albums', 'categories_albums.id_album', 'albums_musics.id_album')
             ->join('categories', 'categories.id_category', 'categories_albums.id_category')
@@ -42,7 +43,7 @@ class HymnalController extends Controller
                 'musics.created_at',
                 'musics.updated_at',
             );
-        return response()->json(Data::data($data, $request));
+        return response()->json(Data::data($data, $request, $model->getFillable()));
     }
 
     public function create(Request $request)
