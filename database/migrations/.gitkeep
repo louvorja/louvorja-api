@@ -1,0 +1,18 @@
+--EXECUTAR MIGRATE
+php artisan migrate
+
+--EXECUTAR SEED / SEED ESPECÍFICA
+php artisan db:seed
+php artisan db:seed --class=PeopleSeeder
+
+--DESAFAZER MIGRATE
+php artisan migrate:rollback --step=1
+
+--REFAZER DB
+php artisan migrate:fresh
+
+--REFAZER E EXECUTAR TODAS AS SEEDS
+php artisan migrate:fresh --seed
+
+--ADD MIGRATE
+php artisan make:migration create_flights_table

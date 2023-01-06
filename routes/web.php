@@ -19,6 +19,8 @@ $router->group(['prefix' => '{lang}', 'middleware' => 'api'], function () use ($
 
     $router->get('/', function () {return [];});
 
+    $router->get('/config', 'ConfigController@index');
+
     $router->get('/musics', 'MusicController@index');
     $router->get('/musics/{id}', 'MusicController@show');
     $router->get('/music/{id}', 'MusicController@show');
@@ -28,7 +30,6 @@ $router->group(['prefix' => '{lang}', 'middleware' => 'api'], function () use ($
     $router->get('/categories_albums', 'CategoryAlbumController@index');
 
     $router->get('/albums', 'AlbumController@index');
-    $router->get('/albums/create', 'AlbumController@create_table');
     $router->get('/albums/{id}', 'AlbumController@show');
     $router->get('/album/{id}', 'AlbumController@show');
 

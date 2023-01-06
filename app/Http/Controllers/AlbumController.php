@@ -121,9 +121,4 @@ class AlbumController extends Controller
     {
         //
     }
-
-    public function create_table()
-    {
-        return Data::structure("albums");
-    }
 }

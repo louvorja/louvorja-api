@@ -55,10 +55,4 @@ class Data
         return $value;
     }
 
-    public static function structure($table_name)
-    {
-        $columns = DB::select("SHOW COLUMNS FROM $table_name");
-        return ["columns" => $columns];
-    }
-
 }
