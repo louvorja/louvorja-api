@@ -33,7 +33,7 @@ class ConfigController extends Controller
             }
         }
 
-        return response()->json($data);
+        return response()->json(["data" => $data]);
     }
 
     public function create(Request $request)

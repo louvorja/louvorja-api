@@ -20,6 +20,7 @@ $router->group(['prefix' => '{lang}', 'middleware' => 'api'], function () use ($
     $router->get('/', function () {return [];});
 
     $router->get('/config', 'ConfigController@index');
+    $router->get('/configs', 'ConfigController@index');
 
     $router->get('/musics', 'MusicController@index');
     $router->get('/musics/{id}', 'MusicController@show');
