@@ -44,9 +44,14 @@ class Config extends Model
                     ];
                 }
                 $list_tables[$table]["primary"] = Schema::getConnection()->getDoctrineSchemaManager()->listTableIndexes($table)['primary']->getColumns();
-                //dd(Schema::getConnection()->getDoctrineSchemaManager()->listTableIndexes($table));
             }
             Config::create(['key' => 'tables', 'type' => 'json', 'value' => json_encode($list_tables)]);
+
+            // Forma de transferência de dados
+            $data_transfer = [];
+            $data_transfer["full"] = ["languages", "categories"]; // Tabelas em que todos os dados devem ser transferidos
+            $data_transfer["album"] = ["albums", "albums_musics", "categories_albums", "musics", "files", "lyrics"]; // Tabelas em que devem ser respeitados o filtro de albuns escolhido pelo usuário
+            Config::create(['key' => 'data_transfer', 'type' => 'json', 'value' => json_encode($data_transfer)]);
 
             //Grava data e hora da atualização
             Config::create(['key' => 'date', 'type' => 'date', 'value' => date('Y-m-d')]);
