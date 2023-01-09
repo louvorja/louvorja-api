@@ -43,15 +43,15 @@ class Config extends Model
                         "length" => DB::connection()->getDoctrineColumn($table, $column)->getLength(),
                     ];
                 }
+                $list_tables[$table]["primary"] = Schema::getConnection()->getDoctrineSchemaManager()->listTableIndexes($table)['primary']->getColumns();
+                //dd(Schema::getConnection()->getDoctrineSchemaManager()->listTableIndexes($table));
             }
             Config::create(['key' => 'tables', 'type' => 'json', 'value' => json_encode($list_tables)]);
-
 
             //Grava data e hora da atualização
             Config::create(['key' => 'date', 'type' => 'date', 'value' => date('Y-m-d')]);
             Config::create(['key' => 'time', 'type' => 'time', 'value' => date('H:i:s')]);
             Config::create(['key' => 'datetime', 'type' => 'datetime', 'value' => date('Y-m-d H:i:s')]);
-
 
             DB::commit();
         } catch (\Exception $e) {

@@ -21,6 +21,8 @@ $router->group(['prefix' => '{lang}', 'middleware' => 'api'], function () use ($
 
     $router->get('/config', 'ConfigController@index');
     $router->get('/configs', 'ConfigController@index');
+    $router->get('/config/{param}', 'ConfigController@index');
+    $router->get('/configs/{param}', 'ConfigController@index');
 
     $router->get('/musics', 'MusicController@index');
     $router->get('/musics/{id}', 'MusicController@show');

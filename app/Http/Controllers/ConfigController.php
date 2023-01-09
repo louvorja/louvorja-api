@@ -12,12 +12,16 @@ class ConfigController extends Controller
 
     }
 
-    public function index(Request $request)
+    public function index($param = '', Request $request)
     {
-        //Verifica se já foi feita atualização no dia, e faz em caso de negativa
-        $datetime = Config::select()->where('key', 'date')->where('value', date('Y-m-d'))->first();
-        if (!$datetime) {
+        if ($param == "generate") {
             Config::generate();
+        } else {
+            //Verifica se já foi feita atualização no dia, e faz em caso de negativa
+            $datetime = Config::select()->where('key', 'date')->where('value', date('Y-m-d'))->first();
+            if (!$datetime) {
+                Config::generate();
+            }
         }
 
         $config = Config::select()->get();
@@ -34,35 +38,5 @@ class ConfigController extends Controller
         }
 
         return response()->json(["data" => $data]);
-    }
-
-    public function create(Request $request)
-    {
-        //
-    }
-
-    public function store(Request $request)
-    {
-        //
-    }
-
-    public function show(CategoryAlbum $category_album)
-    {
-        //
-    }
-
-    public function edit(CategoryAlbum $category_album)
-    {
-        //
-    }
-
-    public function update(Request $request, CategoryAlbum $category_album)
-    {
-        //
-    }
-
-    public function destroy(CategoryAlbum $category_album)
-    {
-        //
     }
 }
