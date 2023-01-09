@@ -12,18 +12,24 @@ class ConfigController extends Controller
 
     }
 
-    public function index($param = '', Request $request)
+    public function index(Request $request)
     {
-        if ($param == "generate") {
+        //Verifica se já foi feita atualização no dia, e faz em caso de negativa
+        $datetime = Config::select()->where('key', 'date')->where('value', date('Y-m-d'))->first();
+        if (!$datetime) {
             Config::generate();
-        } else {
-            //Verifica se já foi feita atualização no dia, e faz em caso de negativa
-            $datetime = Config::select()->where('key', 'date')->where('value', date('Y-m-d'))->first();
-            if (!$datetime) {
-                Config::generate();
-            }
         }
+        return $this->configs();
 
+    }
+    public function generate($param, Request $request)
+    {
+        Config::generate();
+        return $this->configs();
+    }
+
+    public function configs()
+    {
         $config = Config::select()->get();
 
         $data = [];
