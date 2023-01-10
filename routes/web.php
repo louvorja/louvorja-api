@@ -19,6 +19,8 @@ $router->group(['prefix' => '{lang}', 'middleware' => 'api'], function () use ($
 
     $router->get('/', function () {return [];});
 
+    $router->get('/languages', 'LanguageController@index');
+
     $router->get('/config', 'ConfigController@index');
     $router->get('/configs', 'ConfigController@index');
     $router->get('/config/{param}', 'ConfigController@generate');
