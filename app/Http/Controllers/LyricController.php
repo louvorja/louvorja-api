@@ -16,37 +16,14 @@ class LyricController extends Controller
     public function index(Request $request)
     {
         $model = new Lyric;
-        $data = $model->select()->where('id_language', $request->id_language);
-        return response()->json(Data::data($data, $request, $model->getFillable()));
-    }
+        $data = $model->select()->where('lyrics.id_language', $request->id_language);
 
-    public function create(Request $request)
-    {
-        //
-    }
+        if (isset($request["id_album"])) {
+            $data = $data
+                ->join('albums_musics', 'albums_musics.id_music', 'lyrics.id_music')
+                ->where('albums_musics.id_album', $request["id_album"]);
+        }
 
-    public function store(Request $request)
-    {
-        //
-    }
-
-    public function show(Lyric $lyric)
-    {
-        //
-    }
-
-    public function edit(Lyric $lyric)
-    {
-        //
-    }
-
-    public function update(Request $request, Lyric $lyric)
-    {
-        //
-    }
-
-    public function destroy(Lyric $lyric)
-    {
-        //
+        return response()->json(Data::data($data, $request, $model->getFillable(), 'lyrics'));
     }
 }

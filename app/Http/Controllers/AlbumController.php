@@ -37,8 +37,8 @@ class AlbumController extends Controller
         if (isset($request["categories_slug"])) {
             $categories = explode(",", $request["categories_slug"]);
             $data = $data
-                ->leftJoin('categories_albums', 'categories_albums.id_album', 'albums.id_album')
-                ->leftJoin('categories', 'categories.id_category', 'categories_albums.id_category')
+                ->join('categories_albums', 'categories_albums.id_album', 'albums.id_album')
+                ->join('categories', 'categories.id_category', 'categories_albums.id_category')
                 ->whereIn('categories.slug', $categories);
         }
 
@@ -46,17 +46,7 @@ class AlbumController extends Controller
             $data = $data->with('categories');
         }
         $data = $data->distinct();
-        return response()->json(Data::data($data, $request, $model->getFillable()));
-    }
-
-    public function create(Request $request)
-    {
-        //
-    }
-
-    public function store(Request $request)
-    {
-        //
+        return response()->json(Data::data($data, $request, $model->getFillable(), 'albums'));
     }
 
     public function show($id, Request $request)
@@ -107,18 +97,4 @@ class AlbumController extends Controller
         return response()->json($data);
     }
 
-    public function edit(Album $album)
-    {
-        //
-    }
-
-    public function update(Request $request, Album $album)
-    {
-        //
-    }
-
-    public function destroy(Album $album)
-    {
-        //
-    }
 }

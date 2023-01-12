@@ -45,34 +45,4 @@ class HymnalController extends Controller
             );
         return response()->json(Data::data($data, $request, $model->getFillable()));
     }
-
-    public function create(Request $request)
-    {
-        //
-    }
-
-    public function store(Request $request)
-    {
-        //
-    }
-
-    public function show(Music $music)
-    {
-        //
-    }
-
-    public function edit(Music $music)
-    {
-        //
-    }
-
-    public function update(Request $request, Music $music)
-    {
-        //
-    }
-
-    public function destroy(Music $music)
-    {
-        //
-    }
 }

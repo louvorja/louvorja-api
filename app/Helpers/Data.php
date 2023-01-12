@@ -2,12 +2,10 @@
 
 namespace App\Helpers;
 
-use Illuminate\Support\Facades\DB;
-
 class Data
 {
 
-    public static function data($data, $request, $fillable)
+    public static function data($data, $request, $fillable, $table = '')
     {
         if ($request->limit && $request->limit <= 0) {
             $request->limit = 9999;
@@ -22,6 +20,7 @@ class Data
         }
         $fields = Data::arrayFilter($request->all(), $fillable);
         foreach ($fields as $field => $value) {
+            $field = ($table != '' ? $table . '.' : '') . $field;
             $term = explode(":", $value);
             if (!isset($term[1])) {
                 $data->where($field, Data::value($value));

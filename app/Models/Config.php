@@ -50,7 +50,7 @@ class Config extends Model
             // Forma de transferência de dados
             $data_transfer = [];
             $data_transfer["full"] = ["languages", "categories"]; // Tabelas em que todos os dados devem ser transferidos
-            $data_transfer["album"] = ["albums", "albums_musics", "categories_albums", "musics", "files", "lyrics"]; // Tabelas em que devem ser respeitados o filtro de albuns escolhido pelo usuário
+            $data_transfer["album"] = ["albums", "albums_musics", "categories_albums", "musics", "lyrics", "files"]; // Tabelas em que devem ser respeitados o filtro de albuns escolhido pelo usuário
             Config::create(['key' => 'data_transfer', 'type' => 'json', 'value' => json_encode($data_transfer)]);
 
             //Grava data e hora da atualização

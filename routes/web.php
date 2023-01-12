@@ -44,5 +44,6 @@ $router->group(['prefix' => '{lang}', 'middleware' => 'api'], function () use ($
 
     $router->get('/hymnal', 'HymnalController@index');
 
+    $router->get('/files', 'FileController@index');
 
 });
