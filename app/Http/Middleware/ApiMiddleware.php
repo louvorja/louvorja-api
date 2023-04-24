@@ -45,7 +45,7 @@ class apiMiddleware
             }
         }
 
-        $request->limit = ($request->limit ? (int) $request->limit : 10);
+        $request->limit = ($request->limit ? (int) $request->limit : 100);
         if ($request->limit <= 0){
             $request->limit = 999999;
         }
