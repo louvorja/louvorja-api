@@ -20,7 +20,7 @@ class CreateFilesTable extends Migration
             $table->integer('size');
             $table->string('base_url',100);
             $table->string('subdirectory',100);
-            $table->string('file_name',50);
+            $table->string('file_name',100);
             $table->integer('version');
             $table->timestamps();
 
