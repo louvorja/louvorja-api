@@ -1,7 +1,7 @@
 {
-    "name": "laravel/lumen",
-    "description": "The Laravel Lumen Framework.",
-    "keywords": ["framework", "laravel", "lumen"],
+    "name": "louvorja/api",
+    "description": "API LouvorJA.",
+    "keywords": ["api", "louvorja"],
     "license": "MIT",
     "type": "project",
     "require": {
