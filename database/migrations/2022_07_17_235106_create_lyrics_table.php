@@ -28,6 +28,7 @@ class CreateLyricsTable extends Migration
             $table->foreign('id_music')->references('id_music')->on('musics');
             $table->foreign('id_language')->references('id_language')->on('languages');
             $table->foreign('id_file_image')->references('id_file')->on('files');
+            $table->unique(['id_music', 'order']);
         });
     }
 
