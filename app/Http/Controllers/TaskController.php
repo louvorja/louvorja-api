@@ -59,7 +59,7 @@ class TaskController extends Controller
                 $data = json_decode(json_encode(DB::connection('mysql')->table($table)->get()->toArray()), true);
                 $log[$table]["count"] = count($data);
 
-                $chunks = array_chunk($data, 500);
+                $chunks = array_chunk($data, 50);
                 $log[$table]["parts"] = count($chunks);
                 foreach ($chunks as $chunk) {
                     DB::connection('sqlite')->table($table)->insert($chunk);
