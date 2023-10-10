@@ -1,1 +1,1 @@
-php -S localhost:8000 -t public
+php8 -S localhost:8000 -t public

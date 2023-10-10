@@ -53,6 +53,31 @@ class Config extends Model
             $data_transfer["album"] = ["albums", "albums_musics", "categories_albums", "musics", "lyrics", "files"]; // Tabelas em que devem ser respeitados o filtro de albuns escolhido pelo usuário
             Config::create(['key' => 'data_transfer', 'type' => 'json', 'value' => json_encode($data_transfer)]);
 
+
+            //Obter a data e hora da alteração mais recente
+            $exclude = ["migrations", "configs"]; // Não checar essas tabelas
+            $latestUpdatedAt = null;
+            foreach ($tables as $table) {
+                if (in_array($table, $exclude)) {
+                    continue;
+                }
+
+                try {
+                    $maxUpdatedAtInTable = DB::table($table)
+                        ->orderBy('updated_at', 'desc')
+                        ->value('updated_at');
+
+                    if ($maxUpdatedAtInTable > $latestUpdatedAt) {
+                        $latestUpdatedAt = $maxUpdatedAtInTable;
+                    }
+                } catch (\Exception $e) {
+                    //
+                }
+            }
+            Config::create(['key' => 'latest_updated', 'type' => 'datetime', 'value' => $latestUpdatedAt]);
+            Config::create(['key' => 'version', 'type' => 'number', 'value' => strtotime($latestUpdatedAt)]);
+
+
             //Grava data e hora da atualização
             Config::create(['key' => 'date', 'type' => 'date', 'value' => date('Y-m-d')]);
             Config::create(['key' => 'time', 'type' => 'time', 'value' => date('H:i:s')]);
@@ -67,5 +92,4 @@ class Config extends Model
             Config::create(['key' => 'error', 'type' => 'string', 'value' => $e->getMessage()]);
         }
     }
-
 }

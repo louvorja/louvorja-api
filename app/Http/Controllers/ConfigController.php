@@ -22,7 +22,7 @@ class ConfigController extends Controller
         return $this->configs();
 
     }
-    public function generate($param, Request $request)
+    public function generate()
     {
         Config::generate();
         return $this->configs();

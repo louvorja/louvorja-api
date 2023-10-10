@@ -13,11 +13,29 @@
 |
  */
 
-$router->get('/', function () {return [];});
+$router->get('/', function () {
+    return [];
+});
+
+
+
+$router->group(['prefix' => 'tasks'], function () use ($router) {
+
+    $router->get('/', function () {
+        return [];
+    });
+
+    $router->get('/export_database', 'TaskController@export_database');
+
+});
+
+
 
 $router->group(['prefix' => '{lang}', 'middleware' => 'api'], function () use ($router) {
 
-    $router->get('/', function () {return [];});
+    $router->get('/', function () {
+        return [];
+    });
 
     $router->get('/languages', 'LanguageController@index');
 
@@ -39,11 +57,10 @@ $router->group(['prefix' => '{lang}', 'middleware' => 'api'], function () use ($
     $router->get('/album/{id}', 'AlbumController@show');
 
     $router->get('/albums_musics', 'AlbumMusicController@index');
-    
+
     $router->get('/lyrics', 'LyricController@index');
 
     $router->get('/hymnal', 'HymnalController@index');
 
     $router->get('/files', 'FileController@index');
-
 });
