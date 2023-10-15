@@ -19,13 +19,14 @@ $router->get('/', function () {
 
 
 
-$router->group(['prefix' => 'tasks'], function () use ($router) {
+$router->group(['prefix' => 'tasks', 'middleware' => 'api'], function () use ($router) {
 
     $router->get('/', function () {
         return [];
     });
 
     $router->get('/export_database', 'TaskController@export_database');
+    $router->get('/refresh_files_size', 'TaskController@refresh_files_size');
 
 });
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAlbumsTable extends Migration
+class CreateBibleVersionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,15 @@ class CreateAlbumsTable extends Migration
      */
     public function up()
     {
-        Schema::create('albums', function (Blueprint $table) {
-            $table->increments('id_album');
-            $table->string('name')->nullable();
-            $table->unsignedInteger('id_file_image')->nullable();
-            $table->string('color', 7);
+        Schema::create('bible_version', function (Blueprint $table) {
+            $table->increments('id_bible_version');
+            $table->string('name');
+            $table->string('abbreviation');
             $table->string('id_language', 5);
             $table->timestamps();
 
             $table->foreign('id_language')->references('id_language')->on('languages');
-            $table->foreign('id_file_image')->references('id_file')->on('files');
+            $table->unique(['abbreviation', 'id_language']);
         });
     }
 
@@ -33,6 +32,6 @@ class CreateAlbumsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('albums');
+        Schema::dropIfExists('bible_version');
     }
 }

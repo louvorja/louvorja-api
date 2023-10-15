@@ -18,6 +18,7 @@ class CreateFilesTable extends Migration
             $table->string('name',100);
             $table->string('type');
             $table->integer('size');
+            $table->string('base_dir',100);
             $table->string('base_url',100);
             $table->string('subdirectory',100);
             $table->string('file_name',100);
