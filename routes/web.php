@@ -20,14 +20,10 @@ $router->get('/', function () {
 
 
 $router->group(['prefix' => 'tasks', 'middleware' => 'api'], function () use ($router) {
-
-    $router->get('/', function () {
-        return [];
-    });
-
+    $router->get('/', 'TaskController@index');
+    $router->get('/refresh_configs', 'TaskController@refresh_configs');
     $router->get('/export_database', 'TaskController@export_database');
     $router->get('/refresh_files_size', 'TaskController@refresh_files_size');
-
 });
 
 
@@ -42,8 +38,6 @@ $router->group(['prefix' => '{lang}', 'middleware' => 'api'], function () use ($
 
     $router->get('/config', 'ConfigController@index');
     $router->get('/configs', 'ConfigController@index');
-    $router->get('/config/{param}', 'ConfigController@generate');
-    $router->get('/configs/{param}', 'ConfigController@generate');
 
     $router->get('/musics', 'MusicController@index');
     $router->get('/musics/{id}', 'MusicController@show');
