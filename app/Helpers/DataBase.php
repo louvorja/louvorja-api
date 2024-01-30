@@ -203,7 +203,7 @@ class DataBase
                 '' COR_LETRA,
                 lyrics.id_music MUSICA,
                 lyrics.time TEMPO,
-                lyrics.instrumental_time TEMPO_PB,
+                IIF(lyrics.instrumental_time = '00:00:00',lyrics.time,lyrics.instrumental_time) TEMPO_PB,
                 1 FUNDO_LETRA,
                 0 TAMANHO_LETRA,
                 '' LETRA_AUX,
