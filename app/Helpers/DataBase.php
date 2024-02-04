@@ -10,6 +10,40 @@ use App\Helpers\Configs;
 class DataBase
 {
 
+    public static function fn_sqlite_no_accents($field)
+    {
+        return "
+        LOWER(
+        REPLACE(
+        REPLACE(
+        REPLACE(
+        REPLACE(
+        REPLACE(
+        REPLACE(
+        REPLACE(
+        REPLACE(
+        REPLACE(
+        REPLACE(
+        REPLACE(
+        REPLACE(
+        REPLACE(
+        LOWER($field),
+        'á', 'a'),
+        'ã', 'a'),
+        'â', 'a'),
+        'à', 'a'),
+        'é', 'e'),
+        'ê', 'e'),
+        'í', 'i'),
+        'ó', 'o'),
+        'õ', 'o'),
+        'ô', 'o'),
+        'ú', 'u'),
+        'ç', 'c'),
+        'Ó', 'o')
+        )";
+    }
+
     public static function export()
     {
         $database = env('DB_SQLITE_DATABASE');
@@ -139,7 +173,7 @@ class DataBase
             UNION ALL
             SELECT '4' AS ID, 'din-condensed-bold.ttf' AS ARQUIVO, 'config\\fontes\\din-condensed-bold.ttf' AS URL
             UNION ALL
-            SELECT '5' AS ID, 'BD.mdb' AS ARQUIVO, 'config\\BD.mdb' AS URL
+            SELECT '5' AS ID, 'database.db' AS ARQUIVO, 'config\\database.db' AS URL
             UNION ALL
             SELECT '6' AS ID, 'bass.dll' AS ARQUIVO, 'bass.dll' AS URL
             UNION ALL
@@ -226,6 +260,7 @@ class DataBase
                 musics.id_music ID,
                 albums_musics.track FAIXA,
                 musics.name NOME,
+                " . self::fn_sqlite_no_accents("musics.name") . " AS NOME_SEMAC,
                 printf('%03d', albums_musics.track) || ' - ' || musics.name NOME_COM,
                 substr(substr(files_url.subdirectory, 9), 1, length(substr(files_url.subdirectory, 9)) - 1) ALBUM,
                 files_url.name URL,
@@ -245,6 +280,7 @@ class DataBase
                 musics.id_music ID,
                 albums_musics.track FAIXA,
                 musics.name NOME,
+                " . self::fn_sqlite_no_accents("musics.name") . " AS NOME_SEMAC,
                 printf('%03d', albums_musics.track) || ' - ' || musics.name NOME_COM,
                 substr(substr(files_url.subdirectory, 9), 1, length(substr(files_url.subdirectory, 9)) - 1) ALBUM,
                 files_url.name URL,
@@ -434,7 +470,19 @@ class DataBase
                 M.URL,
                 M.URL_INSTRUMENTAL,
                 M.IDIOMA,
-                M.LETRA
+                M.LETRA,
+
+                " . self::fn_sqlite_no_accents("M.NOME ||(CASE WHEN EXISTS (SELECT 1 FROM ALBUM_TIPO WHERE ALBUM_TIPO.ID_ALBUM = A.ID AND ALBUM_TIPO.TIPO = 'HASD') THEN ' (Hino nº ' || printf('%03d', AM.FAIXA) || ') ' ELSE '' END)") . " AS NOME_SEMAC,
+                " . self::fn_sqlite_no_accents("M.LETRA") . " AS LETRA_SEMAC,
+                " . self::fn_sqlite_no_accents("
+                A.NOME ||
+                COALESCE(
+                    (SELECT ' (' || ALBUM_TIPO.SUBTITULO || ')'
+                        FROM ALBUM_TIPO
+                        WHERE ALBUM_TIPO.ID_ALBUM = A.ID
+                        AND ALBUM_TIPO.TIPO = 'JA_ANO'
+                    ),
+                '')") . " AS NOME_ALBUM_COM_SEMAC
             FROM MUSICAS AS M
             LEFT JOIN ALBUM_MUSICAS AS AM ON M.ID = AM.ID_MUSICA
             LEFT JOIN ALBUM AS A ON AM.ID_ALBUM = A.ID
@@ -464,7 +512,11 @@ class DataBase
                 '' AS URL,
                 '' AS URL_INSTRUMENTAL,
                 '' AS IDIOMA,
-                '' AS LETRA
+                '' AS LETRA,
+
+                " . self::fn_sqlite_no_accents("ONL_VIDEOS.NOME") . " AS NOME_SEMAC,
+                '' AS LETRA_SEMAC,
+                " . self::fn_sqlite_no_accents("ONL_PLAYLISTS.NOME || ' (Canal ' || ONL_CANAIS.NOME || ')'") . " AS NOME_ALBUM_COM_SEMAC
             FROM ONL_VIDEOS
             INNER JOIN ONL_PLAYLISTS ON ONL_VIDEOS.PLAYLIST_ID = ONL_PLAYLISTS.PLAYLIST_ID
             INNER JOIN ONL_CANAIS ON ONL_PLAYLISTS.CANAL_ID = ONL_CANAIS.CANAL_ID
@@ -489,7 +541,11 @@ class DataBase
                 URL,
                 '' AS URL_INSTRUMENTAL,
                 '' AS IDIOMA,
-                '' AS LETRA
+                '' AS LETRA,
+
+                " . self::fn_sqlite_no_accents("NOME") . " AS NOME_SEMAC,
+                '' AS LETRA_SEMAC,
+                'coletaneas personalizadas' AS NOME_ALBUM_COM_SEMAC
             FROM _COLETANEAS_PERSONALIZADAS
             ORDER BY NOME");
 
