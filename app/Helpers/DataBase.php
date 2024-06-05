@@ -46,6 +46,7 @@ class DataBase
 
     public static function export()
     {
+        
         $database = env('DB_SQLITE_DATABASE');
         $url_database = url('/') . '/' . $database;
 
@@ -73,7 +74,6 @@ class DataBase
 
         $mysqlConnection = DB::connection('mysql');
         $tables = $mysqlConnection->getDoctrineSchemaManager()->listTableNames();
-
 
         $log = [];
         foreach ($tables as $table) {
@@ -202,7 +202,7 @@ class DataBase
             SELECT '19' AS ID, 'scripts.js' AS ARQUIVO, 'config\\server\\lib\\scripts.js' AS URL");
 
         DB::connection('sqlite')->statement("CREATE TABLE IMAGEM_POSICAO AS
-            SELECT '' IMAGEM, 1 POSICAO");
+            SELECT `name` IMAGEM,image_position POSICAO FROM files WHERE image_position IS NOT NULL");
 
         DB::connection('sqlite')->statement("CREATE VIEW MUSICAS AS
             SELECT

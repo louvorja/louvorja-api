@@ -15,7 +15,7 @@ class File extends Model
         'base_url',
         'subdirectory',
         'file_name',
+        'image_position',
         'version',
     ];
-
 }

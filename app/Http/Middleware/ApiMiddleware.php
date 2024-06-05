@@ -20,13 +20,16 @@ class apiMiddleware
         list($lang) = explode("/", $request->path());
 
         $cache = env('APP_CACHE', true);
+        $debug = env('APP_DEBUG', false);
         //error_log("APP_CACHE=".$cache);
 
-        if (!$request->header('Api-Token')) {
-            return response()->json(['error' => "Token de API não informado!"], 401);
-        }
-        if ($request->header('Api-Token') != env('API_TOKEN')) {
-            return response()->json(['error' => "Token de API inválido!"], 401);
+        if (!$debug) {
+            if (!$request->header('Api-Token')) {
+                return response()->json(['error' => "Token de API não informado!"], 401);
+            }
+            if ($request->header('Api-Token') != env('API_TOKEN')) {
+                return response()->json(['error' => "Token de API inválido!"], 401);
+            }
         }
 
         if ($lang != "" && $lang != "tasks") {
