@@ -17,6 +17,7 @@ class CreateLyricsTable extends Migration
             $table->increments('id_lyric');
             $table->unsignedInteger('id_music');
             $table->string('lyric');
+            $table->string('aux_lyric')->nullable();
             $table->unsignedInteger('id_file_image')->nullable();
             $table->time('time');
             $table->time('instrumental_time');

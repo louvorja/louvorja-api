@@ -240,7 +240,7 @@ class DataBase
                 IIF(lyrics.instrumental_time = '00:00:00',lyrics.time,lyrics.instrumental_time) TEMPO_PB,
                 1 FUNDO_LETRA,
                 0 TAMANHO_LETRA,
-                '' LETRA_AUX,
+                lyrics.aux_lyric LETRA_AUX,
                 0 TAMANHO_LETRA_AUX,
                 '' COR_LETRA_AUX,
                 files.size TAMANHO_IMAGEM
