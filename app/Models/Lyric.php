@@ -11,12 +11,12 @@ class Lyric extends Model
         'id_lyric',
         'id_music',
         'lyric',
-        'image',
+        'aux_lyric',
+        'id_file_image',
         'time',
         'instrumental_time',
         'show_slide',
         'order',
         'id_language',
     ];
-
 }

@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
 use App\Helpers\Configs;
+use App\Helpers\Files;
+use App\Models\File as FileModel;
+use App\Models\Music;
+use App\Models\Lyric;
 
 class DataBase
 {
@@ -14,6 +18,7 @@ class DataBase
     {
         return "
         LOWER(
+        REPLACE(
         REPLACE(
         REPLACE(
         REPLACE(
@@ -40,15 +45,16 @@ class DataBase
         'ô', 'o'),
         'ú', 'u'),
         'ç', 'c'),
+        'É', 'e'),
         'Ó', 'o')
         )";
     }
 
     public static function export()
     {
-        
+
         $database = env('DB_SQLITE_DATABASE');
-        $url_database = url('/') . '/' . $database;
+        $url_database = url(DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $database;
 
         if (File::exists($database)) {
             unlink($database);
@@ -105,7 +111,7 @@ class DataBase
             . " INNER JOIN categories ON categories.id_category = categories_albums.id_category"
             . " WHERE categories.slug = 'hymnal'"
             . " ORDER BY albums_musics.track");
-*/
+        */
 
         /* CRIAÇÃO DE VIEWS PARA RETROCOMPATIBILIDADE (COM A VERSÂO DELPHI) */
 
@@ -761,5 +767,135 @@ class DataBase
         }
 
         return ["url" => $url_database, "logs" => $log];
+    }
+
+    public static function import_file($file_path)
+    {
+        if (!File::exists($file_path)) {
+            return ['error' => 'Arquivo não encontrado.'];
+        }
+
+        $info = pathinfo($file_path);
+        $mime = mime_content_type($file_path);
+
+        if ($mime == "application/zip") {
+
+            $output = dirname($file_path);
+            $output = rtrim($output, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+            $output = $output . '~' . $info['filename'];
+
+            Files::unzip($file_path, $output);
+
+            $text_file = $output . DIRECTORY_SEPARATOR . 'slides.lja';
+            $content = File::get($text_file);
+
+            $sections = preg_split('/\[(.*?)\]/', $content, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+
+            $slides = [];
+            for ($i = 0; $i < count($sections); $i += 2) {
+                $sectionName = trim($sections[$i]);
+
+                $lines = explode("\n", trim($sections[$i + 1]));
+                $data = [];
+                foreach ($lines as $line) {
+                    list($key, $value) = explode('=', $line, 2);
+                    $data[trim($key)] = trim($value);
+                }
+
+                $slides[$sectionName] = $data;
+            }
+
+            $music = [];
+            $lyrics = [];
+
+            $id_music = null;
+            $id_image = null;
+            $order = 0;
+            foreach ($slides as $key => $slide) {
+                $text = trim($slide["letra"] ?? "");
+                $text = mb_convert_encoding($text, 'UTF-8', 'ISO-8859-1');
+                $text = str_replace("|", PHP_EOL, $text);
+                $text = ucfirst($text);
+
+                $slide["url_musica"] = mb_convert_encoding($slide["url_musica"] ?? "", 'UTF-8', 'ISO-8859-1');
+                $slide["imagem"] = mb_convert_encoding($slide["imagem"] ?? "", 'UTF-8', 'ISO-8859-1');
+
+                if ($key == "Geral") {
+                    if ($slide["url_musica"] <> "") {
+                        $file = FileModel::where("name", basename($slide["url_musica"]))->first();
+                        if (!$file) {
+                            $file = FileModel::create([
+                                "name" => basename($slide["url_musica"]),
+                                "file_name" => basename($slide["url_musica"]),
+                                "type" => "music",
+                                "size" => 0,
+                                "base_dir" => "/",
+                                "base_url" => "/",
+                                "subdirectory" => "/",
+                                "version" => 1,
+                            ]);
+                        }
+                        $id_music = $file["id_file"];
+                    }
+                } else {
+                    if ($slide["imagem"] <> "") {
+                        $file = FileModel::where("name", basename($slide["imagem"]))->first();
+                        if (!$file) {
+                            $file = FileModel::create([
+                                "name" => basename($slide["imagem"]),
+                                "file_name" => basename($slide["imagem"]),
+                                "type" => "image_music",
+                                "size" => 0,
+                                "base_dir" => "/",
+                                "base_url" => "/",
+                                "subdirectory" => "/",
+                                "version" => 1,
+                            ]);
+                        }
+                        $id_image = $file["id_file"];
+                    }
+
+                    if ($slide["tipo"] == "CAPA") {
+                        $text = str_replace(PHP_EOL, " ", $text);
+
+                        $music["name"] = $text;
+                        $music["id_file_music"] = $id_music;
+                        $music["id_file_image"] = $id_image;
+                        $music["id_language"] = "pt";
+                    } else {
+                        $order = $order + 10;
+                        $lyrics[] = [
+                            "lyric" => $text,
+                            "id_file_image" => $id_image,
+                            "time" => "00:" . $slide["tempo_hms"],
+                            "instrumental_time" => '00:00:00',
+                            "show_slide" => 1,
+                            "order" => $order,
+                            "id_language" => "pt",
+                        ];
+                    }
+                }
+            }
+
+            File::deleteDirectory($output);
+            $new_path = dirname($file_path);
+            $new_path = rtrim($new_path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+            $new_path = $new_path . 'imported' . DIRECTORY_SEPARATOR;
+
+            if (!File::isDirectory($new_path)) {
+                File::makeDirectory($new_path, 0755, true);
+            }
+            File::move($file_path, $new_path . basename($file_path));
+
+            $music = Music::create($music);
+            foreach ($lyrics as $lyric) {
+                $lyric["id_music"] = $music->id_music;
+                Lyric::create($lyric);
+            }
+
+            return ['music' => $music];
+        } else {
+            return ['error' => 'Formato não suportado.'];
+        }
     }
 }

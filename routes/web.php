@@ -24,6 +24,7 @@ $router->group(['prefix' => 'tasks', 'middleware' => 'api'], function () use ($r
     $router->get('/refresh_configs', 'TaskController@refresh_configs');
     $router->get('/export_database', 'TaskController@export_database');
     $router->get('/refresh_files_size', 'TaskController@refresh_files_size');
+    $router->get('/import_slides', 'TaskController@import_slides');
 });
 
 

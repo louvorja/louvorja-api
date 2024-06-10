@@ -38,6 +38,25 @@ class TaskController extends Controller
         return response()->json($ret);
     }
 
+    public function import_slides()
+    {
+        $dir = app()->basePath('public') . DIRECTORY_SEPARATOR . 'import' . DIRECTORY_SEPARATOR;
+
+        $files = Files::list_files($dir);
+
+        if (isset($files["error"])) {
+            return response()->json($files);
+        }
+
+        $log = [];
+        foreach ($files as $file) {
+            $ret = DataBase::import_file($file["path"]);
+            $log[] = ['file' => $file['name'], 'status' => $ret];
+        }
+
+        return response()->json($log);
+    }
+
     public function index(Request $request)
     {
         Configs::refresh();

@@ -12,6 +12,7 @@ class File extends Model
         'name',
         'type',
         'size',
+        'base_dir',
         'base_url',
         'subdirectory',
         'file_name',

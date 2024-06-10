@@ -11,10 +11,9 @@ class Music extends Model
     protected $fillable = [
         'id_music',
         'name',
-        'image',
-        'folder',
-        'file',
-        'instrumental_file',
+        'id_file_image',
+        'id_file_music',
+        'id_file_instrumental_music',
         'id_language',
     ];
 
