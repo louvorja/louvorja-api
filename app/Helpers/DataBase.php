@@ -745,7 +745,15 @@ class DataBase
             UNION SELECT 65 ID, 'Jd' SIGLA, 26 ID_SECAO, 'NT' TESTAMENTO, 'Judas' LIVRO,  'judas' PALAVRACHAVE, 'Jd' SIGLA_L, '' SIGLA_N, 1 CAPITULOS, '$0ff9774' COR
             UNION SELECT 66 ID, 'Ap' SIGLA, 27 ID_SECAO, 'NT' TESTAMENTO, 'Apocalipse' LIVRO,  'apocalipse' PALAVRACHAVE, 'Ap' SIGLA_L, '' SIGLA_N, 22 CAPITULOS, '$040d1ff' COR");
 
-        DB::connection('sqlite')->statement("CREATE VIEW VERSAO_BIBLICA AS
+        DB::connection('sqlite')->statement("SELECT
+                abbreviation SIGLA,
+                name VERSAO,
+                IIF(abbreviation = 'NTLH', 0, 1) AS QUEBRA,
+                IIF(abbreviation = 'NTLH', '<pb/>', '') AS SIMBOLO_QUEBRA,
+                '' EXPLICACAO_VERSOS
+        FROM bible_version WHERE id_language='pt'");
+
+        /*DB::connection('sqlite')->statement("CREATE VIEW VERSAO_BIBLICA AS
             SELECT 'ACRF' SIGLA, 'Almeida Corrigida e Revisada Fiel' VERSAO, 1 QUEBRA, '' SIMBOLO_QUEBRA, '(31106 versos)' EXPLICACAO_VERSOS
             UNION SELECT 'ARA' SIGLA, 'Almeida Revista e Atualizada' VERSAO, 1 QUEBRA, '' SIMBOLO_QUEBRA, '(31103 versos)
             Juízes 5:32 - Inexistente nesta versão. Está incorporado ao 31.
@@ -755,7 +763,7 @@ class DataBase
             UNION SELECT 'NTLH' SIGLA, 'Nova Tradução na Linguagem de Hoje' VERSAO, 0 QUEBRA, '<pb/>' SIMBOLO_QUEBRA, '(31103 versos)' EXPLICACAO_VERSOS
             UNION SELECT 'NVI' SIGLA, 'Nova Versão Internacional' VERSAO, 1 QUEBRA, '' SIMBOLO_QUEBRA, '(31105 versos)
             Juízes 5:32 - Inexistente nesta versão. Está incorporado ao 31.' EXPLICACAO_VERSOS");
-
+*/
 
 
         /* Renomeia para identificar a versão */
