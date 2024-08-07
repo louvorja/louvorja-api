@@ -52,8 +52,21 @@ class Handler extends ExceptionHandler
     {
         $rendered = parent::render($request, $exception);
 
-        if ($exception instanceof NotFoundHttpException) {
-            //You can do any change as per your requrement here for the not found exception
+        if ($exception instanceof ValidationException) {
+            $errors = $exception->errors();
+            $errorMessages = [];
+
+            foreach ($errors as $field => $messages) {
+                foreach ($messages as $message) {
+                    $errorMessages[] = $message;
+                }
+            }
+
+            return response()->json([
+                'error' => implode(PHP_EOL, $errorMessages),
+                'messages' => $exception->errors(),
+            ], 422);
+        } elseif ($exception instanceof NotFoundHttpException) {
             $message = $exception->getMessage() ? $exception->getMessage() : Response::$statusTexts[$rendered->getStatusCode()];
             $exception = new NotFoundHttpException($message, $exception);
         } elseif ($exception instanceof HttpException) {
@@ -67,8 +80,7 @@ class Handler extends ExceptionHandler
 
         // Resonse
         return response()->json([
-            'status' => "error",
-            'message' => $exception->getMessage(),
+            'error' => $exception->getMessage(),
             'code' => $rendered->getStatusCode(),
         ], $rendered->getStatusCode());
     }

@@ -17,7 +17,16 @@ $router->get('/', function () {
     return [];
 });
 
+$router->group(['prefix' => 'auth', 'middleware' => 'api'], function () use ($router) {
+    $router->post('/login', 'AuthController@login');
 
+    $router->group(['middleware' => 'auth'], function () use ($router) {
+        $router->post('/refresh-token', 'AuthController@refreshToken');
+        $router->post('/refresh_token', 'AuthController@refreshToken');
+        $router->get('/me', 'AuthController@me');
+        $router->post('/logout', 'AuthController@logout');
+    });
+});
 
 $router->group(['prefix' => 'tasks', 'middleware' => 'api'], function () use ($router) {
     $router->get('/', 'TaskController@index');
@@ -26,8 +35,6 @@ $router->group(['prefix' => 'tasks', 'middleware' => 'api'], function () use ($r
     $router->get('/refresh_files_size', 'TaskController@refresh_files_size');
     $router->get('/import_slides', 'TaskController@import_slides');
 });
-
-
 
 $router->group(['prefix' => '{lang}', 'middleware' => 'api'], function () use ($router) {
 

@@ -32,7 +32,7 @@ class apiMiddleware
             }
         }
 
-        if ($lang != "" && $lang != "tasks") {
+        if ($lang != "" && $lang != "tasks" && $lang != "auth") {
             if (!$cache || Cache::store('file')->get("lang_{$lang}") != true) {
                 //error_log("*** Localiza idioma ***");
                 if (!Language::find($lang)) {
