@@ -32,6 +32,7 @@ class DataBase
         REPLACE(
         REPLACE(
         REPLACE(
+        REPLACE(
         LOWER($field),
         'á', 'a'),
         'ã', 'a'),
@@ -46,6 +47,7 @@ class DataBase
         'ú', 'u'),
         'ç', 'c'),
         'É', 'e'),
+        'Ê', 'e'),
         'Ó', 'o')
         )";
     }
