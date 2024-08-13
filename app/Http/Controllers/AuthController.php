@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\User;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -49,11 +48,12 @@ class AuthController extends Controller
             if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json(['error' => 'Login ou senha incorretos.'], 401);
             }
+            $user = auth()->user();
         } catch (JWTException $e) {
             return response()->json(['error' => 'Ocorreu um erro ao tentar fazer o login.'], 500);
         }
 
-        return response()->json(['token' => $token]);
+        return response()->json(['token' => $token, 'user' => $user]);
     }
 
     public function me()
@@ -72,8 +72,11 @@ class AuthController extends Controller
                 ], 500);
             }
 
+            $user = auth()->user();
+
             return response()->json([
                 'token' => $newToken,
+                'user' => $user
             ]);
         } catch (JWTException $e) {
             return response()->json([
