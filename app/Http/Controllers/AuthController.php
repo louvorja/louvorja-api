@@ -101,4 +101,39 @@ class AuthController extends Controller
             ], 500);
         }
     }
+
+    public function changePassword(Request $request)
+    {
+        $this->validate($request, [
+            'current_password' => 'required|string',
+            'new_password' =>  [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/'
+            ],
+        ], [
+            'current_password.required' => 'O campo senha atual é obrigatório.',
+            'new_password.required' => 'O campo nova senha é obrigatório.',
+            'new_password.min' => 'A nova senha deve ter no mínimo 8 caracteres.',
+            'new_password.confirmed' => 'A confirmação da nova senha não coincide.',
+            'new_password.regex' => 'A nova senha deve conter pelo menos uma letra, um número e um caractere especial.',
+        ]);
+
+        $user = $request->user();
+
+        if (!Hash::check($request->input('current_password'), $user->password)) {
+            return response()->json(['error' => 'Senha atual incorreta.'], 400);
+        }
+
+        if (Hash::check($request->input('new_password'), $user->password)) {
+            return response()->json(['error' => 'A nova senha não pode ser igual à senha atual.'], 400);
+        }
+
+        $user->password = Hash::make($request->input('new_password'));
+        $user->save();
+
+        return response()->json(['message' => 'Senha alterada com sucesso.']);
+    }
 }

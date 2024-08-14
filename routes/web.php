@@ -25,6 +25,7 @@ $router->group(['prefix' => 'auth', 'middleware' => 'api'], function () use ($ro
         $router->post('/refresh_token', 'AuthController@refreshToken');
         $router->get('/me', 'AuthController@me');
         $router->post('/logout', 'AuthController@logout');
+        $router->post('/change-password',  'AuthController@changePassword');
     });
 });
 
