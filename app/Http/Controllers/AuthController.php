@@ -132,6 +132,7 @@ class AuthController extends Controller
         }
 
         $user->password = Hash::make($request->input('new_password'));
+        $user->is_temporary_password = false;
         $user->save();
 
         return response()->json(['message' => 'Senha alterada com sucesso.']);

@@ -29,6 +29,11 @@ $router->group(['prefix' => 'auth', 'middleware' => 'api'], function () use ($ro
     });
 });
 
+/*
+middleware para senha confirmada!!!!
+$router->group(['middleware' => 'confirmed_pwd'], function () use ($router) {
+*/
+
 $router->group(['prefix' => 'tasks', 'middleware' => 'api'], function () use ($router) {
     $router->get('/', 'TaskController@index');
     $router->get('/refresh_configs', 'TaskController@refresh_configs');
