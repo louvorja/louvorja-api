@@ -8,10 +8,7 @@ use Illuminate\Http\Request;
 
 class LanguageController extends Controller
 {
-    public function __construct()
-    {
-
-    }
+    public function __construct() {}
 
     public function index(Request $request)
     {
@@ -19,6 +16,6 @@ class LanguageController extends Controller
         $data = $model->select();
 
         $data = $data->distinct();
-        return response()->json(Data::data($data, $request, $model->getFillable()));
+        return response()->json(Data::data($data, $request, [$model->getKeyName(), ...$model->getFillable()]));
     }
 }

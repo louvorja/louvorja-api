@@ -8,10 +8,7 @@ use Illuminate\Http\Request;
 
 class FileController extends Controller
 {
-    public function __construct()
-    {
-
-    }
+    public function __construct() {}
 
     public function index(Request $request)
     {
@@ -27,7 +24,6 @@ class FileController extends Controller
                 ->orWhereRaw('id_file in (select id_file_image from lyrics inner join albums_musics on albums_musics.id_music=lyrics.id_music where albums_musics.id_album=' . $request["id_album"] . ')');
         }
 
-        return response()->json(Data::data($data, $request, $model->getFillable(), 'files'));
+        return response()->json(Data::data($data, $request, [$model->getKeyName(), ...$model->getFillable()], 'files'));
     }
-
 }

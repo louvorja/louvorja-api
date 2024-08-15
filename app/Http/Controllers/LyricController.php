@@ -8,10 +8,7 @@ use Illuminate\Http\Request;
 
 class LyricController extends Controller
 {
-    public function __construct()
-    {
-
-    }
+    public function __construct() {}
 
     public function index(Request $request)
     {
@@ -24,6 +21,6 @@ class LyricController extends Controller
                 ->where('albums_musics.id_album', $request["id_album"]);
         }
 
-        return response()->json(Data::data($data, $request, $model->getFillable(), 'lyrics'));
+        return response()->json(Data::data($data, $request, [$model->getKeyName(), ...$model->getFillable()], 'lyrics'));
     }
 }

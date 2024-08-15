@@ -10,10 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class AlbumController extends Controller
 {
-    public function __construct()
-    {
-
-    }
+    public function __construct() {}
 
     public function index(Request $request)
     {
@@ -46,7 +43,7 @@ class AlbumController extends Controller
             $data = $data->with('categories');
         }
         $data = $data->distinct();
-        return response()->json(Data::data($data, $request, $model->getFillable(), 'albums'));
+        return response()->json(Data::data($data, $request, [$model->getKeyName(), ...$model->getFillable()], 'albums'));
     }
 
     public function show($id, Request $request)
@@ -96,5 +93,4 @@ class AlbumController extends Controller
 
         return response()->json($data);
     }
-
 }

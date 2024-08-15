@@ -17,65 +17,66 @@ $router->get('/', function () {
     return [];
 });
 
-$router->group(['prefix' => 'auth', 'middleware' => 'api'], function () use ($router) {
-    $router->post('/login', 'AuthController@login');
 
-    $router->group(['middleware' => 'auth'], function () use ($router) {
-        $router->post('/refresh-token', 'AuthController@refreshToken');
-        $router->post('/refresh_token', 'AuthController@refreshToken');
-        $router->get('/me', 'AuthController@me');
-        $router->post('/logout', 'AuthController@logout');
-        $router->post('/change-password',  'AuthController@changePassword');
-    });
-});
+$router->group(['middleware' => 'api'], function () use ($router) {
 
+    $router->group(['prefix' => 'auth'], function () use ($router) {
+        $router->post('/login', 'AuthController@login');
 
-$router->group(['prefix' => 'admin', 'middleware' => ['api', 'auth']], function () use ($router) {
-    $router->get('/users', 'UserController@index');
-    $router->get('/users/{id}', 'UserController@show');
-    $router->get('/user/{id}', 'UserController@show');
-});
-/*
-middleware para senha confirmada!!!!
-$router->group(['middleware' => 'confirmed_pwd'], function () use ($router) {
-*/
-
-$router->group(['prefix' => 'tasks', 'middleware' => 'api'], function () use ($router) {
-    $router->get('/', 'TaskController@index');
-    $router->get('/refresh_configs', 'TaskController@refresh_configs');
-    $router->get('/export_database', 'TaskController@export_database');
-    $router->get('/refresh_files_size', 'TaskController@refresh_files_size');
-    $router->get('/import_slides', 'TaskController@import_slides');
-});
-
-$router->group(['prefix' => '{lang}', 'middleware' => ['api', 'lang']], function () use ($router) {
-
-    $router->get('/', function () {
-        return [];
+        $router->group(['middleware' => 'auth'], function () use ($router) {
+            $router->post('/refresh-token', 'AuthController@refreshToken');
+            $router->post('/refresh_token', 'AuthController@refreshToken');
+            $router->get('/me', 'AuthController@me');
+            $router->post('/logout', 'AuthController@logout');
+            $router->post('/change-password',  'AuthController@changePassword');
+        });
     });
 
-    $router->get('/languages', 'LanguageController@index');
 
-    $router->get('/config', 'ConfigController@index');
-    $router->get('/configs', 'ConfigController@index');
+    $router->group(['prefix' => 'admin', 'middleware' => ['auth', 'confirmed_pwd']], function () use ($router) {
+        $router->get('/users', 'UserController@index');
+        $router->get('/users/{id}', 'UserController@show');
+        $router->get('/user/{id}', 'UserController@show');
+    });
 
-    $router->get('/musics', 'MusicController@index');
-    $router->get('/musics/{id}', 'MusicController@show');
-    $router->get('/music/{id}', 'MusicController@show');
 
-    $router->get('/categories', 'CategoryController@index');
+    $router->group(['prefix' => 'tasks'], function () use ($router) {
+        $router->get('/', 'TaskController@index');
+        $router->get('/refresh_configs', 'TaskController@refresh_configs');
+        $router->get('/export_database', 'TaskController@export_database');
+        $router->get('/refresh_files_size', 'TaskController@refresh_files_size');
+        $router->get('/import_slides', 'TaskController@import_slides');
+    });
 
-    $router->get('/categories_albums', 'CategoryAlbumController@index');
+    $router->group(['prefix' => '{lang}', 'middleware' =>  'lang'], function () use ($router) {
 
-    $router->get('/albums', 'AlbumController@index');
-    $router->get('/albums/{id}', 'AlbumController@show');
-    $router->get('/album/{id}', 'AlbumController@show');
+        $router->get('/', function () {
+            return [];
+        });
 
-    $router->get('/albums_musics', 'AlbumMusicController@index');
+        $router->get('/languages', 'LanguageController@index');
 
-    $router->get('/lyrics', 'LyricController@index');
+        $router->get('/config', 'ConfigController@index');
+        $router->get('/configs', 'ConfigController@index');
 
-    $router->get('/hymnal', 'HymnalController@index');
+        $router->get('/musics', 'MusicController@index');
+        $router->get('/musics/{id}', 'MusicController@show');
+        $router->get('/music/{id}', 'MusicController@show');
 
-    $router->get('/files', 'FileController@index');
+        $router->get('/categories', 'CategoryController@index');
+
+        $router->get('/categories_albums', 'CategoryAlbumController@index');
+
+        $router->get('/albums', 'AlbumController@index');
+        $router->get('/albums/{id}', 'AlbumController@show');
+        $router->get('/album/{id}', 'AlbumController@show');
+
+        $router->get('/albums_musics', 'AlbumMusicController@index');
+
+        $router->get('/lyrics', 'LyricController@index');
+
+        $router->get('/hymnal', 'HymnalController@index');
+
+        $router->get('/files', 'FileController@index');
+    });
 });

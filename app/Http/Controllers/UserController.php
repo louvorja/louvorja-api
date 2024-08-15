@@ -14,6 +14,7 @@ class UserController extends Controller
     {
         $model = new User;
         $data = $model->select();
-        return response()->json(Data::data($data, $request, $model->getFillable()));
+
+        return response()->json(Data::data($data, $request, [$model->getKeyName(), ...$model->getFillable()]));
     }
 }

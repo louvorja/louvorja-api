@@ -8,15 +8,12 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function __construct()
-    {
-
-    }
+    public function __construct() {}
 
     public function index(Request $request)
     {
         $model = new Category;
         $data = $model->select()->where('id_language', $request->id_language);
-        return response()->json(Data::data($data, $request, $model->getFillable()));
+        return response()->json(Data::data($data, $request, [$model->getKeyName(), ...$model->getFillable()]));
     }
 }

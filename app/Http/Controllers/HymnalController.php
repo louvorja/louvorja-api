@@ -9,10 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class HymnalController extends Controller
 {
-    public function __construct()
-    {
-
-    }
+    public function __construct() {}
 
     public function index(Request $request)
     {
@@ -43,6 +40,6 @@ class HymnalController extends Controller
                 'musics.created_at',
                 'musics.updated_at',
             );
-        return response()->json(Data::data($data, $request, $model->getFillable()));
+        return response()->json(Data::data($data, $request, [$model->getKeyName(), ...$model->getFillable()]));
     }
 }

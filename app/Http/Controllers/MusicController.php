@@ -10,10 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class MusicController extends Controller
 {
-    public function __construct()
-    {
-
-    }
+    public function __construct() {}
 
     public function index(Request $request)
     {
@@ -48,7 +45,7 @@ class MusicController extends Controller
                 ->where('albums_musics.id_album', $request["id_album"]);
         }
 
-        return response()->json(Data::data($data, $request, $model->getFillable(), 'musics'));
+        return response()->json(Data::data($data, $request, [$model->getKeyName(), ...$model->getFillable()], 'musics'));
     }
 
     public function show($id, Request $request)

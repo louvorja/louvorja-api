@@ -18,22 +18,19 @@ class Data
                 $data->orderBy($f[0], $f[1]);
             }
         }
+
         $fields = Data::arrayFilter($request->all(), $fillable);
         foreach ($fields as $field => $value) {
             $field = ($table != '' ? $table . '.' : '') . $field;
-            $term = explode(":", $value);
-            if (!isset($term[1])) {
-                $data->where($field, Data::value($value));
+            $we = Data::whereExplode($value);
+
+            if ($we['sep'] == "or") {
+                $data->orWhere($field, $we['op'], $we['value']);
             } else {
-                $type = $term[0];
-                unset($term[0]);
-                $value = implode(":", $term);
-                if ($type == "like") {
-                    $value = str_replace("*", "%", $value);
-                    $data->where($field, $type, Data::value($value));
-                }
+                $data->where($field, $we['op'], $we['value']);
             }
         }
+        //echo PHP_EOL . $data->toSql();
         return $data->paginate($request->limit);
     }
 
@@ -54,4 +51,36 @@ class Data
         return $value;
     }
 
+    public static function whereExplode($text)
+    {
+        $type = '=';
+        $value = $text;
+        $sep = 'and';
+
+        $term = explode(":", $text);
+        if (!isset($term[1])) {
+            $value = Data::value($value);
+        } else {
+            $op = $term[0];
+            if ($op == "like" || $op == "orlike") {
+                $type = "like";
+                if ($op == "orlike") {
+                    $sep = 'or';
+                }
+                unset($term[0]);
+                $value = implode(":", $term);
+                $value = str_replace("*", "%", $value);
+                $value = Data::value($value);
+            } elseif ($op == "or") {
+                $sep = 'or';
+                unset($term[0]);
+                $value = implode(":", $term);
+                $value = Data::value($value);
+            } else {
+                $value = Data::value($value);
+            }
+        }
+
+        return ['op' => $type, 'value' => $value, 'sep' => $sep];
+    }
 }
