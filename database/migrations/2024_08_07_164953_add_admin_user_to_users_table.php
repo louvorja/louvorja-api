@@ -18,6 +18,7 @@ class AddAdminUserToUsersTable extends Migration
             'name' => 'admin',
             'username' => 'admin',
             'email' => 'admin@louvorja.com.br',
+            'is_admin' => true,
             'password' => Hash::make('admin'),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),

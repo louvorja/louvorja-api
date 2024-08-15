@@ -29,6 +29,12 @@ $router->group(['prefix' => 'auth', 'middleware' => 'api'], function () use ($ro
     });
 });
 
+
+$router->group(['prefix' => 'admin', 'middleware' => ['api', 'auth']], function () use ($router) {
+    $router->get('/users', 'UserController@index');
+    $router->get('/users/{id}', 'UserController@show');
+    $router->get('/user/{id}', 'UserController@show');
+});
 /*
 middleware para senha confirmada!!!!
 $router->group(['middleware' => 'confirmed_pwd'], function () use ($router) {
@@ -42,7 +48,7 @@ $router->group(['prefix' => 'tasks', 'middleware' => 'api'], function () use ($r
     $router->get('/import_slides', 'TaskController@import_slides');
 });
 
-$router->group(['prefix' => '{lang}', 'middleware' => 'api'], function () use ($router) {
+$router->group(['prefix' => '{lang}', 'middleware' => ['api', 'lang']], function () use ($router) {
 
     $router->get('/', function () {
         return [];
