@@ -35,8 +35,13 @@ $router->group(['middleware' => 'api'], function () use ($router) {
 
     $router->group(['prefix' => 'admin', 'middleware' => ['auth', 'confirmed_pwd']], function () use ($router) {
         $router->get('/users', 'UserController@index');
+        $router->post('/users', 'UserController@store');
         $router->get('/users/{id}', 'UserController@show');
         $router->get('/user/{id}', 'UserController@show');
+        $router->post('/users/{id}', 'UserController@update');
+        $router->post('/user/{id}', 'UserController@update');
+        $router->delete('/users/{id}', 'UserController@destroy');
+        $router->delete('/user/{id}', 'UserController@destroy');
     });
 
 
