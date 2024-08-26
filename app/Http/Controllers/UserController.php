@@ -102,6 +102,9 @@ class UserController extends Controller
             $inputs['password'] = Hash::make($request->input('password'));
             $inputs['is_temporary_password'] = true;
         }
+        if ($user->is_admin) {
+            unset($inputs['permissions']);
+        }
         $user->update($inputs);
 
         $data->message = 'Registro alterado com sucesso!';

@@ -19,6 +19,7 @@ class User extends Model implements AuthenticatableContract, JWTSubject
         'is_temporary_password',
         'is_admin',
         'phone',
+        'permissions',
     ];
 
     protected $hidden = [
@@ -29,6 +30,10 @@ class User extends Model implements AuthenticatableContract, JWTSubject
     protected $appends = [
         'initials',
         'short_name',
+    ];
+
+    protected $casts = [
+        'permissions' => 'array',
     ];
 
     public function getInitialsAttribute()

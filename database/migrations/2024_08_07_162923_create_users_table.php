@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->boolean('is_temporary_password')->default(true);
             $table->boolean('is_admin')->default(false);
             $table->string('phone')->nullable();
+            $table->json('permissions')->nullable();
             $table->timestamps();
         });
     }
