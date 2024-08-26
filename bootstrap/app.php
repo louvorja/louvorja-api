@@ -82,6 +82,7 @@ $app->routeMiddleware([
     'lang' => App\Http\Middleware\LangMiddleware::class,
     'auth' => App\Http\Middleware\Authenticate::class,
     'confirmed_pwd' => App\Http\Middleware\ConfirmedPasswordMiddleware::class,
+    'access' => App\Http\Middleware\AccessMiddleware::class,
 ]);
 
 /*

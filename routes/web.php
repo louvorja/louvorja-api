@@ -34,14 +34,20 @@ $router->group(['middleware' => 'api'], function () use ($router) {
 
 
     $router->group(['prefix' => 'admin', 'middleware' => ['auth', 'confirmed_pwd']], function () use ($router) {
-        $router->get('/users', 'UserController@index');
-        $router->post('/users', 'UserController@store');
-        $router->get('/users/{id}', 'UserController@show');
-        $router->get('/user/{id}', 'UserController@show');
-        $router->post('/users/{id}', 'UserController@update');
-        $router->post('/user/{id}', 'UserController@update');
-        $router->delete('/users/{id}', 'UserController@destroy');
-        $router->delete('/user/{id}', 'UserController@destroy');
+        $router->group(['middleware' => 'access:users'], function () use ($router) {
+            $router->get('/users', 'UserController@index');
+            $router->post('/users', 'UserController@store');
+            $router->get('/users/{id}', 'UserController@show');
+            $router->put('/users/{id}', 'UserController@update');
+            $router->delete('/users/{id}', 'UserController@destroy');
+        });
+        $router->group(['middleware' => 'access:categories'], function () use ($router) {
+            $router->get('/categories', 'CategoryController@index');
+            $router->post('/categories', 'CategoryController@store');
+            $router->get('/categories/{id}', 'CategoryController@show');
+            $router->put('/categories/{id}', 'CategoryController@update');
+            $router->delete('/categories/{id}', 'CategoryController@destroy');
+        });
     });
 
 

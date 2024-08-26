@@ -34,6 +34,8 @@ class User extends Model implements AuthenticatableContract, JWTSubject
 
     protected $casts = [
         'permissions' => 'array',
+        'is_admin' => 'boolean',
+        'is_temporary_password' => 'boolean',
     ];
 
     public function getInitialsAttribute()
