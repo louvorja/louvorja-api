@@ -5,7 +5,7 @@ namespace App\Helpers;
 class Data
 {
 
-    public static function data($data, $request, $fillable, $table = '')
+    public static function data($data, $request, $fillable)
     {
         if ($request->limit && $request->limit <= 0) {
             $request->limit = 9999;
@@ -21,7 +21,6 @@ class Data
 
         $fields = Data::arrayFilter($request->all(), $fillable);
         foreach ($fields as $field => $value) {
-            $field = ($table != '' ? $table . '.' : '') . $field;
             $we = Data::whereExplode($value);
 
             if ($we['sep'] == "or") {
@@ -36,9 +35,33 @@ class Data
 
     public static function arrayFilter($all, $get)
     {
-        return array_filter($all, function ($item) use ($get) {
-            return array_search($item, $get) !== false;
-        }, ARRAY_FILTER_USE_KEY);
+        $fields = [];
+        foreach ($get as $field) {
+            if (is_object($field)) {
+                $field = $field->getValue();
+            }
+            $sep = explode(' ', $field);
+            if (count($sep) > 1) {
+                $field = end($sep);
+                array_pop($sep);
+                if (end($sep) == 'as') {
+                    array_pop($sep);
+                }
+
+                $tfield = implode(" ", $sep);
+            } else {
+                $field = end($sep);
+                $tfield = $field;
+            }
+
+            $sep = explode('.', $field);
+            $field = end($sep);
+
+            if (isset($all[$field])) {
+                $fields[$tfield] = $all[$field];
+            }
+        }
+        return $fields;
     }
 
     public static function value($value)

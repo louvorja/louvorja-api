@@ -48,6 +48,20 @@ $router->group(['middleware' => 'api'], function () use ($router) {
             $router->put('/categories/{id}', 'CategoryController@update');
             $router->delete('/categories/{id}', 'CategoryController@destroy');
         });
+        $router->group(['middleware' => 'access:categories_albums'], function () use ($router) {
+            $router->get('/categories_albums', 'CategoryAlbumController@index');
+            $router->post('/categories_albums', 'CategoryAlbumController@store');
+            $router->get('/categories_albums/{id}', 'CategoryAlbumController@show');
+            $router->put('/categories_albums/{id}', 'CategoryAlbumController@update');
+            $router->delete('/categories_albums/{id}', 'CategoryAlbumController@destroy');
+        });
+        $router->group(['middleware' => 'access:albums'], function () use ($router) {
+            $router->get('/albums', 'AlbumController@index');
+            $router->post('/albums', 'AlbumController@store');
+            $router->get('/albums/{id}', 'AlbumController@show');
+            $router->put('/albums/{id}', 'AlbumController@update');
+            $router->delete('/albums/{id}', 'AlbumController@destroy');
+        });
     });
 
 

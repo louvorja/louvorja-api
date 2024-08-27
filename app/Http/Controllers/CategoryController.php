@@ -9,11 +9,11 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function validationRules($id = null)
+    public function validationRules(Request $request, $id = null)
     {
         return [
             'name' => 'required|string',
-            'slug' => 'required|string',
+            'slug' => 'required|string|unique:categories,slug,' . ($id ? $id : 'NULL') . ',id_category,id_language,' . $request->input('id_language'),
             'id_language' => 'required|string|exists:languages,id_language',
         ];
     }
@@ -22,7 +22,6 @@ class CategoryController extends Controller
     {
         return Validations::validationMessages();
     }
-
 
     public function index(Request $request)
     {
@@ -34,10 +33,9 @@ class CategoryController extends Controller
         return response()->json(Data::data($data, $request, [$model->getKeyName(), ...$model->getFillable()]));
     }
 
-
     public function store(Request $request)
     {
-        $this->validate($request, $this->validationRules(), $this->validationMessages());
+        $this->validate($request, $this->validationRules($request), $this->validationMessages());
 
         $inputs = $request->all();
         if (!$request->filled('order')) {
@@ -67,7 +65,7 @@ class CategoryController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->validate($request, $this->validationRules($id), $this->validationMessages());
+        $this->validate($request, $this->validationRules($request, $id), $this->validationMessages());
 
         $category = Category::find($id);
 

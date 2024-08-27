@@ -14,6 +14,7 @@ class CreateCategoriesAlbumsTable extends Migration
     public function up()
     {
         Schema::create('categories_albums', function (Blueprint $table) {
+            $table->increments('id_category_album');
             $table->unsignedInteger('id_category');
             $table->unsignedInteger('id_album');
             $table->string('name');
@@ -21,7 +22,7 @@ class CreateCategoriesAlbumsTable extends Migration
             $table->string('id_language', 5);
             $table->timestamps();
 
-            $table->primary(['id_category', 'id_album']);
+            $table->unique(['id_category', 'id_album']);
             $table->foreign('id_category')->references('id_category')->on('categories');
             $table->foreign('id_album')->references('id_album')->on('albums');
             $table->foreign('id_language')->references('id_language')->on('languages');

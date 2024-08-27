@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function validationRules($id = null)
+    public function validationRules(Request $request, $id = null)
     {
         return [
             'name' => 'required|string',
@@ -36,7 +36,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $rules = $this->validationRules();
+        $rules = $this->validationRules($request);
         $rules['password'] = 'required|string|min:6';
 
         $this->validate($request, $rules, $this->validationMessages());
@@ -70,7 +70,7 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-        $rules = $this->validationRules($id);
+        $rules = $this->validationRules($request, $id);
         if ($request->filled('password')) {
             $rules['password'] = 'required|string|min:6';
         }

@@ -28,8 +28,11 @@ class AlbumController extends Controller
             'albums.created_at',
             'albums.updated_at',
         )
-            ->where('albums.id_language', $request->id_language)
             ->leftJoin('files', 'albums.id_file_image', 'files.id_file');
+
+        if ($request->id_language) {
+            $data->where('albums.id_language', $request->id_language);
+        }
 
         if (isset($request["categories_slug"])) {
             $categories = explode(",", $request["categories_slug"]);

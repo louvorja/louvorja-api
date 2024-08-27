@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CategoryAlbum extends Model
 {
     protected $table = 'categories_albums';
-    protected $primaryKey = ['id_category', 'id_album'];
+    protected $primaryKey = 'id_category_album';
     public $incrementing = false;
     protected $fillable = [
         'id_category',
@@ -16,5 +16,4 @@ class CategoryAlbum extends Model
         'order',
         'id_language',
     ];
-
 }
