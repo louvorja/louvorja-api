@@ -16,4 +16,14 @@ class CategoryAlbum extends Model
         'order',
         'id_language',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'id_category', 'id_category');
+    }
+
+    public function album()
+    {
+        return $this->belongsTo(Album::class, 'id_album', 'id_album');
+    }
 }

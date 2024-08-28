@@ -67,7 +67,7 @@ class CategoryAlbumController extends Controller
 
     public function show($id, Request $request)
     {
-        $category = CategoryAlbum::find($id);
+        $category = CategoryAlbum::with(['category', 'album'])->find($id);
 
         $data = (object) [];
         $data->data = $category;

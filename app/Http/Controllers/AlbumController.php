@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Data;
+use App\Helpers\Validations;
 use App\Models\Album;
 use App\Models\Music;
 use Illuminate\Http\Request;
@@ -10,7 +11,18 @@ use Illuminate\Support\Facades\DB;
 
 class AlbumController extends Controller
 {
-    public function __construct() {}
+    public function validationRules(Request $request, $id = null)
+    {
+        return [
+            'name' => 'required|string',
+            'id_language' => 'required|string|exists:languages,id_language',
+        ];
+    }
+
+    private function validationMessages()
+    {
+        return Validations::validationMessages();
+    }
 
     public function index(Request $request)
     {
@@ -47,6 +59,18 @@ class AlbumController extends Controller
         }
         $data = $data->distinct();
         return response()->json(Data::data($data, $request, [$model->getKeyName(), ...$model->getFillable()], 'albums'));
+    }
+
+    public function store(Request $request)
+    {
+        $this->validate($request, $this->validationRules($request), $this->validationMessages());
+
+        $album = Album::create($request->all());
+
+        $data = (object) [];
+        $data->data = $album;
+        $data->message = 'Registro cadastrado com sucesso!';
+        return response()->json($data, 201);
     }
 
     public function show($id, Request $request)
@@ -94,6 +118,44 @@ class AlbumController extends Controller
         $data = (object) [];
         $data->data = $album;
 
+        if (!$album) {
+            return response()->json(['error' => 'Registro não encontrado!'], 404);
+        }
+
         return response()->json($data);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $this->validate($request, $this->validationRules($request, $id), $this->validationMessages());
+
+        $album = Album::find($id);
+
+        $data = (object) [];
+        $data->data = $album;
+
+        if (!$album) {
+            return response()->json(['error' => 'Registro não encontrado!'], 404);
+        }
+
+        $album->update($request->all());
+
+        $data->message = 'Registro alterado com sucesso!';
+        return response()->json($data);
+    }
+
+    public function destroy($id)
+    {
+        $album = Album::find($id);
+
+        $data = (object) [];
+        $data->data = $album;
+
+        if (!$album) {
+            return response()->json(['error' => 'Registro não encontrado!'], 404);
+        }
+
+        $album->delete();
+        return response()->json(['message' => 'Registro excluído com sucesso!']);
     }
 }
