@@ -41,27 +41,35 @@ $router->group(['middleware' => 'api'], function () use ($router) {
             $router->put('/users/{id}', 'UserController@update');
             $router->delete('/users/{id}', 'UserController@destroy');
         });
+
+        $router->get('/categories', 'CategoryController@index');
+        $router->get('/categories/{id}', 'CategoryController@show');
         $router->group(['middleware' => 'access:categories'], function () use ($router) {
-            $router->get('/categories', 'CategoryController@index');
             $router->post('/categories', 'CategoryController@store');
-            $router->get('/categories/{id}', 'CategoryController@show');
             $router->put('/categories/{id}', 'CategoryController@update');
             $router->delete('/categories/{id}', 'CategoryController@destroy');
         });
+        $router->get('/categories_albums', 'CategoryAlbumController@index');
+        $router->get('/categories_albums/{id}', 'CategoryAlbumController@show');
         $router->group(['middleware' => 'access:categories_albums'], function () use ($router) {
-            $router->get('/categories_albums', 'CategoryAlbumController@index');
             $router->post('/categories_albums', 'CategoryAlbumController@store');
-            $router->get('/categories_albums/{id}', 'CategoryAlbumController@show');
             $router->put('/categories_albums/{id}', 'CategoryAlbumController@update');
             $router->delete('/categories_albums/{id}', 'CategoryAlbumController@destroy');
         });
+        $router->get('/albums', 'AlbumController@index');
+        $router->get('/albums/{id}', 'AlbumController@show');
         $router->group(['middleware' => 'access:albums'], function () use ($router) {
-            $router->get('/albums', 'AlbumController@index');
             $router->post('/albums', 'AlbumController@store');
-            $router->get('/albums/{id}', 'AlbumController@show');
             $router->put('/albums/{id}', 'AlbumController@update');
             $router->delete('/albums/{id}', 'AlbumController@destroy');
         });
+        $router->get('/files', 'FileController@index');
+        $router->get('/files/{id}', 'FileController@show');
+        /*   $router->group(['middleware' => 'access:files'], function () use ($router) {
+            $router->post('/files', 'AlbumController@store');
+            $router->put('/files/{id}', 'AlbumController@update');
+            $router->delete('/files/{id}', 'AlbumController@destroy');
+        });*/
     });
 
 

@@ -8,7 +8,6 @@ class File extends Model
 {
     protected $primaryKey = 'id_file';
     protected $fillable = [
-        'id_file',
         'name',
         'type',
         'size',
@@ -19,4 +18,13 @@ class File extends Model
         'image_position',
         'version',
     ];
+
+    protected $appends = [
+        'url',
+    ];
+
+    public function getUrlAttribute()
+    {
+        return $this->base_url . $this->subdirectory . $this->file_name;
+    }
 }

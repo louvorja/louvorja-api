@@ -26,4 +26,18 @@ class FileController extends Controller
 
         return response()->json(Data::data($data, $request, [$model->getKeyName(), ...$model->getFillable()], 'files'));
     }
+
+    public function show($id, Request $request)
+    {
+        $file = File::select()->find($id);
+
+        $data = (object) [];
+        $data->data = $file;
+
+        if (!$file) {
+            return response()->json(['error' => 'Registro não encontrado!'], 404);
+        }
+
+        return response()->json($data);
+    }
 }

@@ -8,7 +8,6 @@ class Album extends Model
 {
     protected $primaryKey = 'id_album';
     protected $fillable = [
-        'id_album',
         'name',
         'id_file_image',
         'id_language',
