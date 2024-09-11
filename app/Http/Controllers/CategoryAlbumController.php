@@ -57,22 +57,22 @@ class CategoryAlbumController extends Controller
         if (!$request->filled('name')) {
             $inputs['name'] = '';
         }
-        $category = CategoryAlbum::create($inputs);
+        $category_album = CategoryAlbum::create($inputs);
 
         $data = (object) [];
-        $data->data = $category;
+        $data->data = $category_album;
         $data->message = 'Registro cadastrado com sucesso!';
         return response()->json($data, 201);
     }
 
     public function show($id, Request $request)
     {
-        $category = CategoryAlbum::with(['category', 'album'])->find($id);
+        $category_album = CategoryAlbum::with(['category', 'album'])->find($id);
 
         $data = (object) [];
-        $data->data = $category;
+        $data->data = $category_album;
 
-        if (!$category) {
+        if (!$category_album) {
             return response()->json(['error' => 'Registro não encontrado!'], 404);
         }
 
@@ -83,16 +83,16 @@ class CategoryAlbumController extends Controller
     {
         $this->validate($request, $this->validationRules($request, $id), $this->validationMessages());
 
-        $category = CategoryAlbum::find($id);
+        $category_album = CategoryAlbum::find($id);
 
         $data = (object) [];
-        $data->data = $category;
+        $data->data = $category_album;
 
-        if (!$category) {
+        if (!$category_album) {
             return response()->json(['error' => 'Registro não encontrado!'], 404);
         }
 
-        $category->update($request->all());
+        $category_album->update($request->all());
 
         $data->message = 'Registro alterado com sucesso!';
         return response()->json($data);
@@ -100,16 +100,16 @@ class CategoryAlbumController extends Controller
 
     public function destroy($id)
     {
-        $category = CategoryAlbum::find($id);
+        $category_album = CategoryAlbum::find($id);
 
         $data = (object) [];
-        $data->data = $category;
+        $data->data = $category_album;
 
-        if (!$category) {
+        if (!$category_album) {
             return response()->json(['error' => 'Registro não encontrado!'], 404);
         }
 
-        $category->delete();
+        $category_album->delete();
         return response()->json(['message' => 'Registro excluído com sucesso!']);
     }
 }

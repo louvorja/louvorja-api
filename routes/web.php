@@ -63,6 +63,20 @@ $router->group(['middleware' => 'api'], function () use ($router) {
             $router->put('/albums/{id}', 'AlbumController@update');
             $router->delete('/albums/{id}', 'AlbumController@destroy');
         });
+        $router->get('/musics', 'MusicController@index');
+        $router->get('/musics/{id}', 'MusicController@show');
+        $router->group(['middleware' => 'access:musics'], function () use ($router) {
+            $router->post('/musics', 'MusicController@store');
+            $router->put('/musics/{id}', 'MusicController@update');
+            $router->delete('/musics/{id}', 'MusicController@destroy');
+        });
+        $router->get('/albums_musics', 'AlbumMusicController@index');
+        $router->get('/albums_musics/{id}', 'AlbumMusicController@show');
+        $router->group(['middleware' => 'access:albums_musics'], function () use ($router) {
+            $router->post('/albums_musics', 'AlbumMusicController@store');
+            $router->put('/albums_musics/{id}', 'AlbumMusicController@update');
+            $router->delete('/albums_musics/{id}', 'AlbumMusicController@destroy');
+        });
         $router->get('/files', 'FileController@index');
         $router->get('/files/{id}', 'FileController@show');
         /*   $router->group(['middleware' => 'access:files'], function () use ($router) {

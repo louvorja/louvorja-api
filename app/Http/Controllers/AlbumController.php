@@ -58,7 +58,7 @@ class AlbumController extends Controller
             $data = $data->with('categories');
         }
         $data = $data->distinct();
-        return response()->json(Data::data($data, $request, [$model->getKeyName(), ...$model->getFillable()], 'albums'));
+        return response()->json(Data::data($data, $request, [$model->getKeyName(), ...$model->getFillable()]));
     }
 
     public function store(Request $request)

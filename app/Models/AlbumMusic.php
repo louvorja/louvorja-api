@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class AlbumMusic extends Model
 {
     protected $table = 'albums_musics';
-    protected $primaryKey = ['id_album', 'id_music'];
+    protected $primaryKey = 'id_album_music';
     public $incrementing = false;
     protected $fillable = [
         'id_album',
@@ -16,4 +16,14 @@ class AlbumMusic extends Model
         'id_language',
     ];
 
+
+    public function music()
+    {
+        return $this->belongsTo(Music::class, 'id_music', 'id_music');
+    }
+
+    public function album()
+    {
+        return $this->belongsTo(Album::class, 'id_album', 'id_album');
+    }
 }
