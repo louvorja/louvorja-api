@@ -28,7 +28,7 @@ class MusicController extends Controller
     public function index(Request $request)
     {
         $model = new Music;
-        $data = $model->select()
+        $data = $model
             ->leftJoin('files as files_image', 'musics.id_file_image', 'files_image.id_file')
             ->leftJoin('files as files_music', 'musics.id_file_music', 'files_music.id_file')
             ->leftJoin('files as files_instrumental_music', 'musics.id_file_instrumental_music', 'files_instrumental_music.id_file')
@@ -65,18 +65,6 @@ class MusicController extends Controller
         return response()->json(Data::data($data, $request, [$model->getKeyName(), ...$model->getFillable()]));
     }
 
-    public function store(Request $request)
-    {
-        $this->validate($request, $this->validationRules($request), $this->validationMessages());
-
-        $music = Music::create($request->all());
-
-        $data = (object) [];
-        $data->data = $music;
-        $data->message = 'Registro cadastrado com sucesso!';
-        return response()->json($data, 201);
-    }
-
     public function show($id, Request $request)
     {
         $music = Music::select(
@@ -84,14 +72,14 @@ class MusicController extends Controller
             'musics.name',
             'musics.id_file_image',
             DB::raw('concat(files_image.base_url,files_image.subdirectory,files_image.file_name) as url_image'),
-            'files_image.version as image_version',
-            'files_image.image_position as image_position',
+            DB::raw('files_image.version as image_version'),
+            DB::raw('files_image.image_position as image_position'),
             'musics.id_file_music',
             DB::raw('concat(files_music.base_url,files_music.subdirectory,files_music.file_name) as url_music'),
-            'files_music.version as music_version',
+            DB::raw('files_music.version as music_version'),
             'musics.id_file_instrumental_music',
             DB::raw('concat(files_instrumental_music.base_url,files_instrumental_music.subdirectory,files_instrumental_music.file_name) as url_instrumental_music'),
-            'files_instrumental_music.version as instrumental_music_version',
+            DB::raw('files_instrumental_music.version as instrumental_music_version'),
             'musics.id_language',
             'musics.created_at',
             'musics.updated_at',
@@ -126,6 +114,18 @@ class MusicController extends Controller
         $data->data = $music;
 
         return response()->json($data);
+    }
+
+    public function store(Request $request)
+    {
+        $this->validate($request, $this->validationRules($request), $this->validationMessages());
+
+        $music = Music::create($request->all());
+
+        $data = (object) [];
+        $data->data = $music;
+        $data->message = 'Registro cadastrado com sucesso!';
+        return response()->json($data, 201);
     }
 
     public function update(Request $request, $id)

@@ -33,6 +33,20 @@ class CategoryController extends Controller
         return response()->json(Data::data($data, $request, [$model->getKeyName(), ...$model->getFillable()]));
     }
 
+    public function show($id, Request $request)
+    {
+        $category = Category::find($id);
+
+        $data = (object) [];
+        $data->data = $category;
+
+        if (!$category) {
+            return response()->json(['error' => 'Registro não encontrado!'], 404);
+        }
+
+        return response()->json($data);
+    }
+
     public function store(Request $request)
     {
         $this->validate($request, $this->validationRules($request), $this->validationMessages());
@@ -47,20 +61,6 @@ class CategoryController extends Controller
         $data->data = $category;
         $data->message = 'Registro cadastrado com sucesso!';
         return response()->json($data, 201);
-    }
-
-    public function show($id, Request $request)
-    {
-        $category = Category::find($id);
-
-        $data = (object) [];
-        $data->data = $category;
-
-        if (!$category) {
-            return response()->json(['error' => 'Registro não encontrado!'], 404);
-        }
-
-        return response()->json($data);
     }
 
     public function update(Request $request, $id)

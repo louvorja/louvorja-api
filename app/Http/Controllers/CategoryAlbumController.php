@@ -46,6 +46,20 @@ class CategoryAlbumController extends Controller
         return response()->json(Data::data($data, $request, $fields));
     }
 
+    public function show($id, Request $request)
+    {
+        $category_album = CategoryAlbum::with(['category', 'album'])->find($id);
+
+        $data = (object) [];
+        $data->data = $category_album;
+
+        if (!$category_album) {
+            return response()->json(['error' => 'Registro não encontrado!'], 404);
+        }
+
+        return response()->json($data);
+    }
+  
     public function store(Request $request)
     {
         $this->validate($request, $this->validationRules($request), $this->validationMessages());
@@ -63,20 +77,6 @@ class CategoryAlbumController extends Controller
         $data->data = $category_album;
         $data->message = 'Registro cadastrado com sucesso!';
         return response()->json($data, 201);
-    }
-
-    public function show($id, Request $request)
-    {
-        $category_album = CategoryAlbum::with(['category', 'album'])->find($id);
-
-        $data = (object) [];
-        $data->data = $category_album;
-
-        if (!$category_album) {
-            return response()->json(['error' => 'Registro não encontrado!'], 404);
-        }
-
-        return response()->json($data);
     }
 
     public function update(Request $request, $id)

@@ -45,18 +45,6 @@ class AlbumMusicController extends Controller
         return response()->json(Data::data($data, $request, $fields));
     }
 
-    public function store(Request $request)
-    {
-        $this->validate($request, $this->validationRules($request), $this->validationMessages());
-
-        $album_music = AlbumMusic::create($request->all());
-
-        $data = (object) [];
-        $data->data = $album_music;
-        $data->message = 'Registro cadastrado com sucesso!';
-        return response()->json($data, 201);
-    }
-
     public function show($id, Request $request)
     {
         $album_music = AlbumMusic::with(['album', 'music'])->find($id);
@@ -69,6 +57,18 @@ class AlbumMusicController extends Controller
         }
 
         return response()->json($data);
+    }
+
+    public function store(Request $request)
+    {
+        $this->validate($request, $this->validationRules($request), $this->validationMessages());
+
+        $album_music = AlbumMusic::create($request->all());
+
+        $data = (object) [];
+        $data->data = $album_music;
+        $data->message = 'Registro cadastrado com sucesso!';
+        return response()->json($data, 201);
     }
 
     public function update(Request $request, $id)

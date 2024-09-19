@@ -33,6 +33,19 @@ class UserController extends Controller
         return response()->json(Data::data($data, $request, [$model->getKeyName(), ...$model->getFillable()]));
     }
 
+    public function show($id, Request $request)
+    {
+        $user = User::find($id);
+
+        $data = (object) [];
+        $data->data = $user;
+
+        if (!$user) {
+            return response()->json(['error' => 'Registro não encontrado!'], 404);
+        }
+
+        return response()->json($data);
+    }
 
     public function store(Request $request)
     {
@@ -52,20 +65,6 @@ class UserController extends Controller
         $data->data = $user;
         $data->message = 'Registro cadastrado com sucesso!';
         return response()->json($data, 201);
-    }
-
-    public function show($id, Request $request)
-    {
-        $user = User::find($id);
-
-        $data = (object) [];
-        $data->data = $user;
-
-        if (!$user) {
-            return response()->json(['error' => 'Registro não encontrado!'], 404);
-        }
-
-        return response()->json($data);
     }
 
     public function update(Request $request, $id)

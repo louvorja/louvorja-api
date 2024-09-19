@@ -32,7 +32,7 @@ class AlbumController extends Controller
             'albums.name',
             'albums.id_file_image',
             DB::raw('concat(files.base_url,files.subdirectory,files.file_name) as url_image'),
-            'files.version as image_version',
+            DB::raw('files.version as image_version'),
             'albums.id_language',
             'albums.color',
             DB::raw((isset($request["categories_slug"]) ? 'categories_albums.name' : '""') . ' as subtitle'),
@@ -59,18 +59,6 @@ class AlbumController extends Controller
         }
         $data = $data->distinct();
         return response()->json(Data::data($data, $request, [$model->getKeyName(), ...$model->getFillable()]));
-    }
-
-    public function store(Request $request)
-    {
-        $this->validate($request, $this->validationRules($request), $this->validationMessages());
-
-        $album = Album::create($request->all());
-
-        $data = (object) [];
-        $data->data = $album;
-        $data->message = 'Registro cadastrado com sucesso!';
-        return response()->json($data, 201);
     }
 
     public function show($id, Request $request)
@@ -123,6 +111,18 @@ class AlbumController extends Controller
         }
 
         return response()->json($data);
+    }
+
+    public function store(Request $request)
+    {
+        $this->validate($request, $this->validationRules($request), $this->validationMessages());
+
+        $album = Album::create($request->all());
+
+        $data = (object) [];
+        $data->data = $album;
+        $data->message = 'Registro cadastrado com sucesso!';
+        return response()->json($data, 201);
     }
 
     public function update(Request $request, $id)

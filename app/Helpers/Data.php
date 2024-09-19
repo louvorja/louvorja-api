@@ -5,7 +5,7 @@ namespace App\Helpers;
 class Data
 {
 
-    public static function data($data, $request, $fillable)
+    public static function data($data, $request, $fillable, $except = [])
     {
         if ($request->limit && $request->limit <= 0) {
             $request->limit = 9999;
@@ -19,7 +19,7 @@ class Data
             }
         }
 
-        $fields = Data::arrayFilter($request->all(), $fillable);
+        $fields = Data::arrayFilter($request->except($except), $fillable);
         foreach ($fields as $field => $value) {
             $we = Data::whereExplode($value);
 

@@ -77,6 +77,13 @@ $router->group(['middleware' => 'api'], function () use ($router) {
             $router->put('/albums_musics/{id}', 'AlbumMusicController@update');
             $router->delete('/albums_musics/{id}', 'AlbumMusicController@destroy');
         });
+        $router->get('/lyrics', 'LyricController@index');
+        $router->get('/lyrics/{id}', 'LyricController@show');
+        $router->group(['middleware' => 'access:lyrics'], function () use ($router) {
+            $router->post('/lyrics', 'LyricController@store');
+            $router->put('/lyrics/{id}', 'LyricController@update');
+            $router->delete('/lyrics/{id}', 'LyricController@destroy');
+        });
         $router->get('/files', 'FileController@index');
         $router->get('/files/{id}', 'FileController@show');
         /*   $router->group(['middleware' => 'access:files'], function () use ($router) {
