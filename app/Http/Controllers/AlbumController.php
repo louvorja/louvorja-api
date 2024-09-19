@@ -27,7 +27,7 @@ class AlbumController extends Controller
     public function index(Request $request)
     {
         $model = new Album;
-        $data = $model->select(
+        $fields = [
             'albums.id_album',
             'albums.name',
             'albums.id_file_image',
@@ -39,7 +39,8 @@ class AlbumController extends Controller
             DB::raw((isset($request["categories_slug"]) ? 'categories_albums.order' : '""') . ' as `order`'),
             'albums.created_at',
             'albums.updated_at',
-        )
+        ];
+        $data = $model->select($fields)
             ->leftJoin('files', 'albums.id_file_image', 'files.id_file');
 
         if ($request->id_language) {
@@ -58,7 +59,7 @@ class AlbumController extends Controller
             $data = $data->with('categories');
         }
         $data = $data->distinct();
-        return response()->json(Data::data($data, $request, [$model->getKeyName(), ...$model->getFillable()]));
+        return response()->json(Data::data($data, $request, $fields));
     }
 
     public function show($id, Request $request)

@@ -28,26 +28,26 @@ class MusicController extends Controller
     public function index(Request $request)
     {
         $model = new Music;
-        $data = $model
+        $fields = [
+            'musics.id_music',
+            'musics.name',
+            'musics.id_file_image',
+            DB::raw('concat(files_image.base_url,files_image.subdirectory,files_image.file_name) as url_image'),
+            'files_image.version as image_version',
+            'musics.id_file_music',
+            DB::raw('concat(files_music.base_url,files_music.subdirectory,files_music.file_name) as url_music'),
+            'files_music.version as music_version',
+            'musics.id_file_instrumental_music',
+            DB::raw('concat(files_instrumental_music.base_url,files_instrumental_music.subdirectory,files_instrumental_music.file_name) as url_instrumental_music'),
+            'files_instrumental_music.version as instrumental_music_version',
+            'musics.id_language',
+            'musics.created_at',
+            'musics.updated_at',
+        ];
+        $data = $model->select($fields)
             ->leftJoin('files as files_image', 'musics.id_file_image', 'files_image.id_file')
             ->leftJoin('files as files_music', 'musics.id_file_music', 'files_music.id_file')
-            ->leftJoin('files as files_instrumental_music', 'musics.id_file_instrumental_music', 'files_instrumental_music.id_file')
-            ->select(
-                'musics.id_music',
-                'musics.name',
-                'musics.id_file_image',
-                DB::raw('concat(files_image.base_url,files_image.subdirectory,files_image.file_name) as url_image'),
-                'files_image.version as image_version',
-                'musics.id_file_music',
-                DB::raw('concat(files_music.base_url,files_music.subdirectory,files_music.file_name) as url_music'),
-                'files_music.version as music_version',
-                'musics.id_file_instrumental_music',
-                DB::raw('concat(files_instrumental_music.base_url,files_instrumental_music.subdirectory,files_instrumental_music.file_name) as url_instrumental_music'),
-                'files_instrumental_music.version as instrumental_music_version',
-                'musics.id_language',
-                'musics.created_at',
-                'musics.updated_at',
-            );
+            ->leftJoin('files as files_instrumental_music', 'musics.id_file_instrumental_music', 'files_instrumental_music.id_file');
         if ($request->id_language) {
             $data->where('musics.id_language', $request->id_language);
         }
@@ -62,7 +62,7 @@ class MusicController extends Controller
                 ->where('albums_musics.id_album', $request["id_album"]);
         }
 
-        return response()->json(Data::data($data, $request, [$model->getKeyName(), ...$model->getFillable()]));
+        return response()->json(Data::data($data, $request, $fields));
     }
 
     public function show($id, Request $request)

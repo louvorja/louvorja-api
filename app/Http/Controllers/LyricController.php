@@ -26,27 +26,24 @@ class LyricController extends Controller
     public function index(Request $request)
     {
         $model = new Lyric;
-        $data = $model
-            ->leftJoin('musics', 'musics.id_music', 'lyrics.id_music')
-            ->select(
-                'lyrics.id_lyric',
-                'lyrics.id_music',
-                DB::raw('musics.name as music'),
-                'lyrics.lyric',
-                'lyrics.aux_lyric',
-                'lyrics.id_file_image',
-                'lyrics.time',
-                'lyrics.instrumental_time',
-                'lyrics.show_slide',
-                'lyrics.order',
-                'lyrics.id_language',
-            );
+        $fields = [
+            'lyrics.id_lyric',
+            'lyrics.id_music',
+            DB::raw('musics.name as music'),
+            'lyrics.lyric',
+            'lyrics.aux_lyric',
+            'lyrics.id_file_image',
+            'lyrics.time',
+            'lyrics.instrumental_time',
+            'lyrics.show_slide',
+            'lyrics.order',
+            'lyrics.id_language',
+        ];
+        $data = $model->select($fields)
+            ->leftJoin('musics', 'musics.id_music', 'lyrics.id_music');
 
         if ($request->id_language) {
             $data->where('lyrics.id_language', $request->id_language);
-        }
-        if ($request->id_music) {
-            $data->where('lyrics.id_music', $request->id_music);
         }
 
         if (isset($request["id_album"])) {
@@ -55,7 +52,7 @@ class LyricController extends Controller
                 ->where('albums_musics.id_album', $request["id_album"]);
         }
 
-        return response()->json(Data::data($data, $request, [$model->getKeyName(), ...$model->getFillable()], ['id_music']));
+        return response()->json(Data::data($data, $request, $fields));
     }
 
     public function show($id, Request $request)
