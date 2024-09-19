@@ -16,10 +16,11 @@ class CreateLogsTable extends Migration
         Schema::create('logs', function (Blueprint $table) {
             $table->increments('id_log');
             $table->string('table');
-            $table->string('operation_type');
-            $table->string('user');
-            $table->json('previous_data');
-            $table->json('current_data');
+            $table->string('action');
+            $table->json('old_values')->nullable();
+            $table->json('new_values')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->json('user')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ class CreateLogsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bible_verse');
+        Schema::dropIfExists('logs');
     }
 }

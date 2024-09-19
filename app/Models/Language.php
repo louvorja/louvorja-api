@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 
-class Language extends Model
+class Language extends BaseModel
 {
     protected $primaryKey = 'id_language';
     protected $keyType = 'string';

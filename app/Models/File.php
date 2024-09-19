@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 
-class File extends Model
+class File extends BaseModel
 {
     protected $primaryKey = 'id_file';
     protected $fillable = [

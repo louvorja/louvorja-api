@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 
-class Album extends Model
+class Album extends BaseModel
 {
     protected $primaryKey = 'id_album';
     protected $fillable = [

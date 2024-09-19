@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 
-class AlbumMusic extends Model
+class AlbumMusic extends BaseModel
 {
     protected $table = 'albums_musics';
     protected $primaryKey = 'id_album_music';

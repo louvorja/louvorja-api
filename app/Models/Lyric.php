@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 
-class Lyric extends Model
+class Lyric extends BaseModel
 {
     protected $primaryKey = 'id_lyric';
     protected $fillable = [

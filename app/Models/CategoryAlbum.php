@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 
-class CategoryAlbum extends Model
+class CategoryAlbum extends BaseModel
 {
     protected $table = 'categories_albums';
     protected $primaryKey = 'id_category_album';
