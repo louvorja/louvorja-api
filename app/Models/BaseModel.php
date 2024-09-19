@@ -56,10 +56,15 @@ class BaseModel extends Model
 
             $oldValues = $changedOldValues;
             $newValues = $changedValues;
+        } elseif ($action === 'insert') {
+            foreach ($newValues as $key => $value) {
+                $telegram_log .= "✔️ <b>{$key}</b>\n";
+                $telegram_log .= "<blockquote>{$value}</blockquote>\n\n";
+            }
         } else {
-            foreach ($newValues as $key => $newValue) {
-                $telegram_log .= ($action === 'insert' ? "✔️" : "❌") . " <b>{$key}</b>\n";
-                $telegram_log .= "<blockquote>{$newValue}</blockquote>\n\n";
+            foreach ($oldValues as $key => $value) {
+                $telegram_log .=  "❌ <b>{$key}</b>\n";
+                $telegram_log .= "<blockquote>{$value}</blockquote>\n\n";
             }
         }
 
