@@ -1,0 +1,4 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home1/maycor44/sites/louvorja.com.br/api
