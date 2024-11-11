@@ -36,7 +36,7 @@ class Kernel extends ConsoleKernel
                 echo "Executado!" . PHP_EOL;
                 Configs::set('schedule:refresh_configs', date('Y-m-d H:i:s'), 'datetime', $ret);
                 $telegramService = new TelegramService();
-                $telegramService->sendMessage("✅ Rotina executada: Atualização de configurações!");
+                $telegramService->sendMessage("⏰ Rotina executada: Atualização de configurações!");
                 $telegramService->sendMessage("<pre>" . json_encode($ret, JSON_PRETTY_PRINT) . "</pre>");
             }
         })->dailyAt('00:00');
@@ -50,7 +50,7 @@ class Kernel extends ConsoleKernel
                 echo "Executado!" . PHP_EOL;
                 Configs::set('schedule:refresh_files_size', date('Y-m-d H:i:s'), 'datetime', $ret);
                 $telegramService = new TelegramService();
-                $telegramService->sendMessage("✅ Rotina executada: Atualização de tamanho de arquivos no Banco de Dados!");
+                $telegramService->sendMessage("⏰ Rotina executada: Atualização de tamanho de arquivos no Banco de Dados!");
                 $telegramService->sendMessage("<pre>" . json_encode($ret, JSON_PRETTY_PRINT) . "</pre>");
             }
         })->dailyAt('01:00');
@@ -64,7 +64,7 @@ class Kernel extends ConsoleKernel
                 echo "Executado!" . PHP_EOL;
                 Configs::set('schedule:export_database', date('Y-m-d H:i:s'), 'datetime', $ret);
                 $telegramService = new TelegramService();
-                $telegramService->sendMessage("✅ Rotina executada: Exportação de Banco de Dados!");
+                $telegramService->sendMessage("⏰ Rotina executada: Exportação de Banco de Dados!");
                 $telegramService->sendMessage("<pre>" . json_encode($ret, JSON_PRETTY_PRINT) . "</pre>");
             }
         })->dailyAt('02:00');
