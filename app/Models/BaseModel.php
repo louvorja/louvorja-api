@@ -30,6 +30,10 @@ class BaseModel extends Model
 
     private static function logChanges($model, $action, $oldValues, $newValues)
     {
+        if ($model->getTable() == "configs") {
+            return;
+        }
+
         $telegram_log = "";
         if ($action === 'update') {
             $changedValues = [];

@@ -15,9 +15,17 @@ class TaskController extends Controller
         set_time_limit(60 * 60);
     }
 
-    public function refresh_files_size()
+    public function refresh_files_size($check_version = true)
     {
+        if ($check_version) {
+            $version = Configs::get("version");
+            $last_version = Configs::get("version_files_size");
+            if ($last_version == $version) {
+                return;
+            }
+        }
         $ret = Files::refresh_size();
+        Configs::set("version_files_size", $version);
         return response()->json($ret);
     }
 
