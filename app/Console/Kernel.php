@@ -29,23 +29,45 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(function () {
             $controller = new TaskController();
-            $controller->refresh_configs();
+            $ret = $controller->refresh_configs();
 
-            Configs::set('schedule:refresh_configs', date('Y-m-d H:i:s'), 'datetime');
-
-            $telegramService = new TelegramService();
-            $telegramService->sendMessage("✅ As configurações do Banco de Dados foram atualizadas!");
+            echo "Tarefa: refresh_configs" . PHP_EOL;
+            if ($ret) {
+                echo "Executado!" . PHP_EOL;
+                Configs::set('schedule:refresh_configs', date('Y-m-d H:i:s'), 'datetime', $ret);
+                $telegramService = new TelegramService();
+                $telegramService->sendMessage("✅ Rotina executada: Atualização de configurações!");
+                $telegramService->sendMessage("<pre>" . json_encode($ret, JSON_PRETTY_PRINT) . "</pre>");
+            }
         })->dailyAt('00:00');
 
         $schedule->call(function () {
             $controller = new TaskController();
-            $controller->refresh_files_size();
+            $ret = $controller->refresh_files_size();
 
-            Configs::set('schedule:refresh_files_size', date('Y-m-d H:i:s'), 'datetime');
-
-            $telegramService = new TelegramService();
-            $telegramService->sendMessage("✅ Os tamanhos dos arquivos foram atualizados no Banco de Dados!");
+            echo "Tarefa: refresh_files_size" . PHP_EOL;
+            if ($ret) {
+                echo "Executado!" . PHP_EOL;
+                Configs::set('schedule:refresh_files_size', date('Y-m-d H:i:s'), 'datetime', $ret);
+                $telegramService = new TelegramService();
+                $telegramService->sendMessage("✅ Rotina executada: Atualização de tamanho de arquivos no Banco de Dados!");
+                $telegramService->sendMessage("<pre>" . json_encode($ret, JSON_PRETTY_PRINT) . "</pre>");
+            }
         })->dailyAt('01:00');
+
+        $schedule->call(function () {
+            $controller = new TaskController();
+            $ret = $controller->export_database();
+
+            echo "Tarefa: export_database" . PHP_EOL;
+            if ($ret) {
+                echo "Executado!" . PHP_EOL;
+                Configs::set('schedule:export_database', date('Y-m-d H:i:s'), 'datetime', $ret);
+                $telegramService = new TelegramService();
+                $telegramService->sendMessage("✅ Rotina executada: Exportação de Banco de Dados!");
+                $telegramService->sendMessage("<pre>" . json_encode($ret, JSON_PRETTY_PRINT) . "</pre>");
+            }
+        })->dailyAt('02:00');
 
         //})->everyMinute();
     }

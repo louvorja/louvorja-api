@@ -26,7 +26,7 @@ class TaskController extends Controller
         }
         $ret = Files::refresh_size();
         Configs::set("version_files_size", $version);
-        return response()->json($ret);
+        return $ret;
     }
 
     public function refresh_configs()
@@ -35,15 +35,22 @@ class TaskController extends Controller
         $data = Configs::get();
         $ret["data"] = $data;
 
-        return response()->json($ret);
+        return $ret;
     }
 
-    public function export_database()
+    public function export_database($check_version = true)
     {
-        Configs::refresh();
-        $ret = DataBase::export();
+        if ($check_version) {
+            $version = Configs::get("version");
+            $last_version = Configs::get("version_export_database");
+            if ($last_version == $version) {
+                return;
+            }
+        }
 
-        return response()->json($ret);
+        $ret = DataBase::export();
+        Configs::set("version_export_database", $version);
+        return $ret;
     }
 
     public function import_slides()
@@ -67,7 +74,7 @@ class TaskController extends Controller
 
     public function index(Request $request)
     {
-        Configs::refresh();
+        /*  Configs::refresh();
 
         $version = Configs::get("version");
         $last_version = Configs::get("last_version");
@@ -90,6 +97,6 @@ class TaskController extends Controller
         }
 
         $data = Configs::get();
-        return response()->json(["logs" => $logs, "data" => $data]);
+        return response()->json(["logs" => $logs, "data" => $data]);*/
     }
 }

@@ -33,7 +33,7 @@ class Configs
         return $data;
     }
 
-    public static function set($key, $value = "", $type = "")
+    public static function set($key, $value = "", $type = "", $details = null)
     {
         if ($type == "") {
             if (is_numeric($value)) {
@@ -43,7 +43,7 @@ class Configs
             }
         }
         Config::where('key', $key)->delete();
-        Config::create(['key' => $key, 'type' => $type, 'value' => $value]);
+        Config::create(['key' => $key, 'type' => $type, 'value' => $value, 'details' => $details]);
 
         $config = Configs::get($key);
         return [$key => $config];

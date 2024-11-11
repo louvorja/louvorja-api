@@ -12,5 +12,10 @@ class Config extends BaseModel
         'key',
         'type',
         'value',
+        'details',
+    ];
+
+    protected $casts = [
+        'details' => 'array',
     ];
 }

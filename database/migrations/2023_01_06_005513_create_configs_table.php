@@ -17,6 +17,7 @@ class CreateConfigsTable extends Migration
             $table->string('key');
             $table->enum('type', ['string', 'json', 'number', 'date', 'time', 'datetime']);
             $table->text('value')->nullable();
+            $table->json('details')->nullable();
             $table->timestamps();
 
             $table->primary('key');
