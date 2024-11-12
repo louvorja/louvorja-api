@@ -100,9 +100,9 @@ class BaseModel extends Model
         $message .= "\n";
         $message .= "{$telegram_log}\n";
         $message .= "<b>Resumo:</b>\n";
-        $message .= "Antes: <pre>" . json_encode($oldValues) . "</pre>\n\n";
-        $message .= "Depois: <pre>" . json_encode($newValues) . "</pre>\n\n";
-        $message .= "Usuário: <pre>" . json_encode(Auth::user()) . "</pre>\n\n";
+        $message .= "Antes: <pre>" . json_encode($oldValues, JSON_PRETTY_PRINT) . "</pre>\n\n";
+        $message .= "Depois: <pre>" . json_encode($newValues, JSON_PRETTY_PRINT) . "</pre>\n\n";
+        $message .= "Usuário: <pre>" . json_encode(Auth::user(), JSON_PRETTY_PRINT) . "</pre>\n\n";
 
         $telegramService->sendMessage($message);
     }

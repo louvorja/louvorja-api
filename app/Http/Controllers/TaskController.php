@@ -53,6 +53,21 @@ class TaskController extends Controller
         return $ret;
     }
 
+    public function export_database_json($check_version = true)
+    {
+        /*if ($check_version) {*/
+        $version = Configs::get("version");
+        /*    $last_version = Configs::get("version_export_database_json");
+            if ($last_version == $version) {
+                return;
+            }
+        }*/
+
+        $ret = DataBase::export_json();
+        Configs::set("version_export_database_json", $version);
+        return $ret;
+    }
+
     public function import_slides()
     {
         $dir = app()->basePath('public') . DIRECTORY_SEPARATOR . 'import' . DIRECTORY_SEPARATOR;
@@ -98,5 +113,7 @@ class TaskController extends Controller
 
         $data = Configs::get();
         return response()->json(["logs" => $logs, "data" => $data]);*/
+
+        return response()->json([]);
     }
 }

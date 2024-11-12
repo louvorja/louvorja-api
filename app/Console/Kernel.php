@@ -69,6 +69,20 @@ class Kernel extends ConsoleKernel
             }
         })->dailyAt('02:00');
 
+        $schedule->call(function () {
+            $controller = new TaskController();
+            $ret = $controller->export_database_json();
+
+            echo "Tarefa: export_database_json" . PHP_EOL;
+            if ($ret) {
+                echo "Executado!" . PHP_EOL;
+                Configs::set('schedule:export_database_json', date('Y-m-d H:i:s'), 'datetime', $ret);
+                //$telegramService = new TelegramService();
+                //$telegramService->sendMessage("⏰ Rotina executada: Exportação de Banco de Dados em JSON!");
+                //$telegramService->sendMessage("<pre>" . json_encode($ret, JSON_PRETTY_PRINT) . "</pre>");
+            }
+        })->everyMinute(); //->dailyAt('02:00');
+
         //})->everyMinute();
     }
 }

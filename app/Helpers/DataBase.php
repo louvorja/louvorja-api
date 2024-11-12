@@ -10,6 +10,7 @@ use App\Helpers\Files;
 use App\Models\File as FileModel;
 use App\Models\Music;
 use App\Models\Lyric;
+use App\Models\Language;
 
 class DataBase
 {
@@ -50,6 +51,52 @@ class DataBase
         'Ê', 'e'),
         'Ó', 'o')
         )";
+    }
+
+    public static function save_file($dir, $name, $data)
+    {
+        try {
+            file_put_contents($dir . $name, $data);
+            return [
+                'status' => 'success',
+                'file' => $dir . $name,
+            ];
+        } catch (\Exception $e) {
+            return [
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'file' => $dir . $name,
+            ];
+        }
+    }
+
+    public static function export_json()
+    {
+        $logs = [];
+
+        $path = app()->basePath('public/db/json/');
+        if (!File::exists($path)) {
+            File::makeDirectory($path, 0755, true);
+        }
+
+        $files = File::files($path);
+        foreach ($files as $file) {
+            File::delete($file);
+        }
+
+        $langs = Language::all();
+        foreach ($langs as $lang) {
+            $l = $lang->id_language;
+
+            $data = Music::select([
+                '*',
+                DB::raw("(select group_concat(replace(lyric,'\r\n',' ') separator ' ') from lyrics where lyrics.id_music=musics.id_music) as lyric"),
+            ])->where("id_language", $l)->get();
+            $ret = self::save_file($path, $l . "_musics.json", $data->toJson());
+            $logs[] = $ret;
+        }
+
+        return $logs;
     }
 
     public static function export()

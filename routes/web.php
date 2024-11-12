@@ -100,6 +100,7 @@ $router->group(['middleware' => 'api'], function () use ($router) {
         $router->get('/export_database', 'TaskController@export_database');
         $router->get('/refresh_files_size', 'TaskController@refresh_files_size');
         $router->get('/import_slides', 'TaskController@import_slides');
+        $router->get('/export_database_json', 'TaskController@export_database_json');
     });
 
     $router->group(['prefix' => '{lang}', 'middleware' =>  'lang'], function () use ($router) {
