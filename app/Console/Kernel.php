@@ -57,6 +57,20 @@ class Kernel extends ConsoleKernel
 
         $schedule->call(function () {
             $controller = new TaskController();
+            $ret = $controller->refresh_files_duration();
+
+            echo "Tarefa: refresh_files_duration" . PHP_EOL;
+            if ($ret) {
+                echo "Executado!" . PHP_EOL;
+                Configs::set('schedule:refresh_files_duration', date('Y-m-d H:i:s'), 'datetime', $ret);
+                $telegramService = new TelegramService();
+                $telegramService->sendMessage("⏰ Rotina executada: Atualização de duração de arquivos no Banco de Dados!");
+                $telegramService->sendMessage("<pre>" . json_encode($ret, JSON_PRETTY_PRINT) . "</pre>");
+            }
+        })->dailyAt('01:00');
+
+        $schedule->call(function () {
+            $controller = new TaskController();
             $ret = $controller->export_database();
 
             echo "Tarefa: export_database" . PHP_EOL;
@@ -81,7 +95,7 @@ class Kernel extends ConsoleKernel
                 //$telegramService->sendMessage("⏰ Rotina executada: Exportação de Banco de Dados em JSON!");
                 //$telegramService->sendMessage("<pre>" . json_encode($ret, JSON_PRETTY_PRINT) . "</pre>");
             }
-        })->everyMinute(); //->dailyAt('02:00');
+        })->dailyAt('02:00');
 
         //})->everyMinute();
     }

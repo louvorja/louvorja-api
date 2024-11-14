@@ -29,6 +29,20 @@ class TaskController extends Controller
         return $ret;
     }
 
+    public function refresh_files_duration($check_version = true)
+    {
+        if ($check_version) {
+            $version = Configs::get("version");
+            $last_version = Configs::get("version_files_duration");
+            if ($last_version == $version) {
+                return;
+            }
+        }
+        $ret = Files::refresh_duration();
+        Configs::set("version_files_duration", $version);
+        return $ret;
+    }
+
     public function refresh_configs()
     {
         $ret = Configs::refresh();
