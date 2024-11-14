@@ -89,12 +89,58 @@ class DataBase
             $l = $lang->id_language;
 
             $data = Music::select([
-                '*',
-                DB::raw("(select group_concat(replace(lyric,'\r\n',' ') separator ' ') from lyrics where lyrics.id_music=musics.id_music) as lyric"),
-            ])->where("id_language", $l)->get();
+                'id_music',
+                'name',
+                DB::raw("if(ifnull(id_file_instrumental_music,0) > 0,1,0) as has_instrumental_music"),
+                DB::raw("(select group_concat(lyric separator ' ') from lyrics where lyrics.id_music=musics.id_music) as lyric"),
+                DB::raw("(select group_concat(albums.name separator '|')
+                    from albums
+                    inner join albums_musics on (albums_musics.id_album=albums.id_album)
+                    inner join categories_albums on (categories_albums.id_album=albums.id_album)
+                    inner join categories on (categories.id_category=categories_albums.id_category)
+                    where 1=1
+                    and categories.type in ('hymnal','collection')
+                    and albums_musics.id_music=musics.id_music) as albums_names"),
+            ])
+                ->where("id_language", $l)
+                ->with(['albums' => function ($query) {
+                    $query->select(['albums.id_album', 'albums.name']);
+                }])
+                ->get();
+            //dd($data->toJson());
+            //echo "<pre>" . json_encode($data->toArray(), JSON_PRETTY_PRINT) . "</pre>";
+            //exit;
             $ret = self::save_file($path, $l . "_musics.json", $data->toJson());
             $logs[] = $ret;
         }
+
+        $musics = Music::select([
+            'musics.id_music',
+            'musics.name',
+            DB::raw("concat('/',files_image.subdirectory,files_image.file_name) as url_image"),
+            DB::raw("concat('/',files_music.subdirectory,files_music.file_name) as url_music"),
+            DB::raw("concat('/',files_instrumental_music.subdirectory,files_instrumental_music.file_name) as url_instrumental_music"),
+        ])
+            ->leftJoin('files as files_image', 'musics.id_file_image', 'files_image.id_file')
+            ->leftJoin('files as files_music', 'musics.id_file_music', 'files_music.id_file')
+            ->leftJoin('files as files_instrumental_music', 'musics.id_file_instrumental_music', 'files_instrumental_music.id_file')
+            ->with(['lyric' => function ($query) {
+                $query->select([
+                    'lyrics.id_lyric',
+                    'lyrics.id_music',
+                    'lyrics.lyric',
+                    'lyrics.aux_lyric',
+                    'lyrics.id_file_image',
+                    'lyrics.time',
+                    'lyrics.instrumental_time',
+                    'lyrics.show_slide',
+                    'lyrics.order',
+                ]);
+            }])
+            ->get();
+        //dd($musics->toJson());
+        echo "<pre>" . json_encode($musics->toArray(), JSON_PRETTY_PRINT) . "</pre>";
+        exit;
 
         return $logs;
     }

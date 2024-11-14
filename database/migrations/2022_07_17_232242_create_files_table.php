@@ -23,6 +23,7 @@ class CreateFilesTable extends Migration
             $table->string('subdirectory', 100);
             $table->string('file_name', 100);
             $table->integer('image_position')->nullable();
+            $table->time('duration')->nullable();
             $table->integer('version');
             $table->timestamps();
 

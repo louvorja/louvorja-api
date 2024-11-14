@@ -20,4 +20,9 @@ class Music extends BaseModel
     {
         return $this->belongsToMany(Album::class, 'albums_musics', 'id_music', 'id_album')->withPivot('track');
     }
+
+    public function lyric()
+    {
+        return $this->hasMany(Lyric::class, 'id_music', 'id_music');
+    }
 }
