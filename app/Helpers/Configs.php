@@ -115,28 +115,30 @@ class Configs
 
             $version = self::get("version");
             if ($version == strtotime($latestUpdatedAt)) {
-                return [];
+                $status = "";
+                $message = null;
+            } else {
+
+                Config::where('key', 'latest_updated')->delete();
+                Config::create(['key' => 'latest_updated', 'type' => 'datetime', 'value' => $latestUpdatedAt]);
+
+                Config::where('key', 'version')->delete();
+                Config::create(['key' => 'version', 'type' => 'number', 'value' => strtotime($latestUpdatedAt)]);
+
+
+                //Grava data e hora da atualização
+                Config::where('key', 'date')->delete();
+                Config::create(['key' => 'date', 'type' => 'date', 'value' => date('Y-m-d')]);
+                Config::where('key', 'time')->delete();
+                Config::create(['key' => 'time', 'type' => 'time', 'value' => date('H:i:s')]);
+                Config::where('key', 'datetime')->delete();
+                Config::create(['key' => 'datetime', 'type' => 'datetime', 'value' => date('Y-m-d H:i:s')]);
+
+                DB::commit();
+
+                $status = "success";
+                $message = null;
             }
-
-            Config::where('key', 'latest_updated')->delete();
-            Config::create(['key' => 'latest_updated', 'type' => 'datetime', 'value' => $latestUpdatedAt]);
-
-            Config::where('key', 'version')->delete();
-            Config::create(['key' => 'version', 'type' => 'number', 'value' => strtotime($latestUpdatedAt)]);
-
-
-            //Grava data e hora da atualização
-            Config::where('key', 'date')->delete();
-            Config::create(['key' => 'date', 'type' => 'date', 'value' => date('Y-m-d')]);
-            Config::where('key', 'time')->delete();
-            Config::create(['key' => 'time', 'type' => 'time', 'value' => date('H:i:s')]);
-            Config::where('key', 'datetime')->delete();
-            Config::create(['key' => 'datetime', 'type' => 'datetime', 'value' => date('Y-m-d H:i:s')]);
-
-            DB::commit();
-
-            $status = "success";
-            $message = null;
         } catch (\Exception $e) {
             //Rollback em caso de erros
             DB::rollback();

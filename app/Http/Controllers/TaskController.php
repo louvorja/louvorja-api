@@ -46,8 +46,12 @@ class TaskController extends Controller
     public function refresh_configs()
     {
         $ret = Configs::refresh();
-        $data = Configs::get();
-        $ret["data"] = $data;
+        if ($ret["status"] <> "") {
+            $data = Configs::get();
+            $ret["data"] = $data;
+        } else {
+            $ret = [];
+        }
 
         return $ret;
     }
