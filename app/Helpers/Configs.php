@@ -113,6 +113,11 @@ class Configs
                 }
             }
 
+            $version = self::get("version");
+            if ($version == strtotime($latestUpdatedAt)) {
+                return [];
+            }
+
             Config::where('key', 'latest_updated')->delete();
             Config::create(['key' => 'latest_updated', 'type' => 'datetime', 'value' => $latestUpdatedAt]);
 
