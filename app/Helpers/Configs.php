@@ -59,39 +59,6 @@ class Configs
 
             $tables = DB::connection()->getDoctrineSchemaManager()->listTableNames();
 
-            /*
-            //Limpa tabela
-            Config::query()->delete();
-
-            //Lista de tabelas do sistema
-            $list_tables = [];
-            DB::connection()->getDoctrineSchemaManager()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
-            
-            foreach ($tables as $table) {
-                if ($table == 'migrations') {
-                    continue;
-                }
-                $list_tables[$table] = [];
-
-                $columns = Schema::getColumnListing($table);
-                $list_tables[$table]["columns"] = [];
-                foreach ($columns as $column) {
-                    $list_tables[$table]["columns"][$column] = [
-                        "type" => DB::connection()->getDoctrineColumn($table, $column)->getType()->getName(),
-                        "length" => DB::connection()->getDoctrineColumn($table, $column)->getLength(),
-                    ];
-                }
-                $list_tables[$table]["primary"] = Schema::getConnection()->getDoctrineSchemaManager()->listTableIndexes($table)['primary']->getColumns();
-            }
-            Config::create(['key' => 'tables', 'type' => 'json', 'value' => json_encode($list_tables)]);
-
-            // Forma de transferência de dados
-            $data_transfer = [];
-            $data_transfer["full"] = ["languages", "categories"]; // Tabelas em que todos os dados devem ser transferidos
-            $data_transfer["album"] = ["albums", "albums_musics", "categories_albums", "musics", "lyrics", "files"]; // Tabelas em que devem ser respeitados o filtro de albuns escolhido pelo usuário
-            Config::create(['key' => 'data_transfer', 'type' => 'json', 'value' => json_encode($data_transfer)]);
-            */
-
             //Obter a data e hora da alteração mais recente
             $exclude = ["migrations", "configs"]; // Não checar essas tabelas
             $latestUpdatedAt = null;
@@ -134,11 +101,11 @@ class Configs
                 Config::where('key', 'datetime')->delete();
                 Config::create(['key' => 'datetime', 'type' => 'datetime', 'value' => date('Y-m-d H:i:s')]);
 
-                DB::commit();
 
                 $status = "success";
                 $message = null;
             }
+            DB::commit();
         } catch (\Exception $e) {
             //Rollback em caso de erros
             DB::rollback();
