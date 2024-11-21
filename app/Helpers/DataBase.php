@@ -94,7 +94,7 @@ class DataBase
                 DB::raw("if(ifnull(id_file_instrumental_music,0) > 0,1,0) as has_instrumental_music"),
                 DB::raw("files_music.duration as duration"),
                 DB::raw("(select group_concat(lyric separator ' ') from lyrics where lyrics.id_music=musics.id_music) as lyric"),
-                DB::raw("(select group_concat(albums.name separator '|')
+                DB::raw("(select group_concat(distinct albums.name separator '|')
                     from albums
                     inner join albums_musics on (albums_musics.id_album=albums.id_album)
                     inner join categories_albums on (categories_albums.id_album=albums.id_album)
@@ -106,11 +106,12 @@ class DataBase
                 ->leftJoin('files as files_music', 'musics.id_file_music', 'files_music.id_file')
                 ->where("id_language", $l)
                 ->with(['albums' => function ($query) {
-                    $query->select(['albums.id_album', 'albums.name'])
+                    $query->select(['albums.id_album', 'albums.name',    DB::raw('min(categories.order) as `order`')])
                         ->leftJoin('categories_albums', 'categories_albums.id_album', 'albums.id_album')
                         ->leftJoin('categories', 'categories.id_category', 'categories_albums.id_category')
                         ->whereIn('categories.type', ['hymnal', 'collection'])
-                        ->orderBy('categories.order');
+                        ->groupBy(['albums.id_album', 'albums.name', 'albums_musics.id_music', 'albums_musics.id_album', 'albums_musics.track'])
+                        ->orderBy('order');
                 }])
                 ->get();
             //dd($data->toArray());
@@ -152,13 +153,15 @@ class DataBase
                     'albums.id_album',
                     'albums.name',
                     DB::raw("concat('/',files_image.subdirectory,files_image.file_name) as url_image"),
-                    'categories.order'
+                    DB::raw('min(categories.order) as `order`'),
                 ])
                     ->leftJoin('files as files_image', 'albums.id_file_image', 'files_image.id_file')
                     ->leftJoin('categories_albums', 'categories_albums.id_album', 'albums.id_album')
                     ->leftJoin('categories', 'categories.id_category', 'categories_albums.id_category')
                     ->whereIn('categories.type', ['hymnal', 'collection'])
-                    ->orderBy('categories.order');
+                    ->groupBy(['albums.id_album', 'albums.name', 'albums_musics.id_music', 'albums_musics.id_album', 'albums_musics.track'])
+                    ->orderBy('order')
+                ;
             }])
             ->get();
         foreach ($musics as $music) {
