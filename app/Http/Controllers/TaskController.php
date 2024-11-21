@@ -73,13 +73,13 @@ class TaskController extends Controller
 
     public function export_database_json($check_version = true)
     {
-        /*if ($check_version) {*/
-        $version = Configs::get("version");
-        /*  $last_version = Configs::get("version_export_database_json");
+        if ($check_version) {
+            $version = Configs::get("version");
+            $last_version = Configs::get("version_export_database_json");
             if ($last_version == $version) {
                 return;
             }
-        }*/
+        }
 
         $ret = DataBase::export_json();
         Configs::set("version_export_database_json", $version);
