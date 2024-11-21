@@ -106,7 +106,11 @@ class DataBase
                 ->leftJoin('files as files_music', 'musics.id_file_music', 'files_music.id_file')
                 ->where("id_language", $l)
                 ->with(['albums' => function ($query) {
-                    $query->select(['albums.id_album', 'albums.name']);
+                    $query->select(['albums.id_album', 'albums.name'])
+                        ->leftJoin('categories_albums', 'categories_albums.id_album', 'albums.id_album')
+                        ->leftJoin('categories', 'categories.id_category', 'categories_albums.id_category')
+                        ->whereIn('categories.type', ['hymnal', 'collection'])
+                        ->orderBy('categories.order');
                 }])
                 ->get();
             //dd($data->toArray());
@@ -114,12 +118,13 @@ class DataBase
             //exit;
             $ret = self::save_file($path, $l . "_musics.json", $data->toJson());
             $logs[] = $ret;
-        }
-*/
+        }*/
+
         $musics = Music::select([
             'musics.id_music',
             'musics.name',
             DB::raw("concat('/',files_image.subdirectory,files_image.file_name) as url_image"),
+            DB::raw("files_image.image_position"),
             DB::raw("concat('/',files_music.subdirectory,files_music.file_name) as url_music"),
             DB::raw("concat('/',files_instrumental_music.subdirectory,files_instrumental_music.file_name) as url_instrumental_music"),
         ])
@@ -133,6 +138,7 @@ class DataBase
                     'lyrics.lyric',
                     'lyrics.aux_lyric',
                     DB::raw("concat('/',files_image.subdirectory,files_image.file_name) as url_image"),
+                    DB::raw("files_image.image_position"),
                     'lyrics.time',
                     DB::raw('if(lyrics.instrumental_time = 0,lyrics.time,lyrics.instrumental_time) as instrumental_time'),
                     'lyrics.show_slide',
@@ -142,7 +148,17 @@ class DataBase
                     ->orderBy('lyrics.order', 'asc');
             }])
             ->with(['albums' => function ($query) {
-                $query->select(['albums.id_album', 'albums.name']);
+                $query->select([
+                    'albums.id_album',
+                    'albums.name',
+                    DB::raw("concat('/',files_image.subdirectory,files_image.file_name) as url_image"),
+                    'categories.order'
+                ])
+                    ->leftJoin('files as files_image', 'albums.id_file_image', 'files_image.id_file')
+                    ->leftJoin('categories_albums', 'categories_albums.id_album', 'albums.id_album')
+                    ->leftJoin('categories', 'categories.id_category', 'categories_albums.id_category')
+                    ->whereIn('categories.type', ['hymnal', 'collection'])
+                    ->orderBy('categories.order');
             }])
             ->get();
         foreach ($musics as $music) {
@@ -661,25 +677,6 @@ class DataBase
             FROM _COLETANEAS_PERSONALIZADAS
             ORDER BY NOME");
 
-        /*
-        DB::connection('sqlite')->statement("CREATE VIEW LISTA_MUSICAS_M_ONL AS
-            SELECT * FROM LISTA_MUSICAS
-            UNION
-            SELECT * FROM LISTA_MUSICAS_ONL
-            ORDER BY NOME");
-
-        DB::connection('sqlite')->statement("CREATE VIEW LISTA_MUSICAS_M_PERSO AS
-            SELECT * FROM LISTA_MUSICAS
-            UNION
-            SELECT * FROM LISTA_MUSICAS_PERSO
-            ORDER BY NOME");
-
-        DB::connection('sqlite')->statement("CREATE VIEW LISTA_MUSICAS_ONL_PERSO AS
-            SELECT * FROM LISTA_MUSICAS_ONL
-            UNION
-            SELECT * FROM LISTA_MUSICAS_PERSO
-            ORDER BY NOME");
-        */
 
         DB::connection('sqlite')->statement("CREATE VIEW LISTA_MUSICAS_TODAS AS
             SELECT * FROM LISTA_MUSICAS
@@ -859,19 +856,6 @@ class DataBase
                     IIF(abbreviation = 'NTLH', '<pb/>', '') AS SIMBOLO_QUEBRA,
                     '' EXPLICACAO_VERSOS
             FROM bible_version WHERE id_language='pt'");
-
-        /*DB::connection('sqlite')->statement("CREATE VIEW VERSAO_BIBLICA AS
-            SELECT 'ACRF' SIGLA, 'Almeida Corrigida e Revisada Fiel' VERSAO, 1 QUEBRA, '' SIMBOLO_QUEBRA, '(31106 versos)' EXPLICACAO_VERSOS
-            UNION SELECT 'ARA' SIGLA, 'Almeida Revista e Atualizada' VERSAO, 1 QUEBRA, '' SIMBOLO_QUEBRA, '(31103 versos)
-            Juízes 5:32 - Inexistente nesta versão. Está incorporado ao 31.
-            II Coríntios 13:14 - Inexistente nesta versão. O verso 13 está incorporado no 12 e o 14 passou a ser o 13.
-            Apocalispe 12:18 - Inexistente nesta versão. Está incorporado ao 17.' EXPLICACAO_VERSOS
-            UNION SELECT 'ARIB' SIGLA, 'Almeida Revisada Imprensa Bíblica' VERSAO, 1 QUEBRA, '' SIMBOLO_QUEBRA, '(31106 versos)' EXPLICACAO_VERSOS
-            UNION SELECT 'NTLH' SIGLA, 'Nova Tradução na Linguagem de Hoje' VERSAO, 0 QUEBRA, '<pb/>' SIMBOLO_QUEBRA, '(31103 versos)' EXPLICACAO_VERSOS
-            UNION SELECT 'NVI' SIGLA, 'Nova Versão Internacional' VERSAO, 1 QUEBRA, '' SIMBOLO_QUEBRA, '(31105 versos)
-            Juízes 5:32 - Inexistente nesta versão. Está incorporado ao 31.' EXPLICACAO_VERSOS");
-*/
-
 
         /* Renomeia para identificar a versão */
         $version = Configs::get("version");
