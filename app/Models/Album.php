@@ -18,4 +18,9 @@ class Album extends BaseModel
     {
         return $this->belongsToMany(Category::class, 'categories_albums', 'id_album', 'id_category')->withPivot(['name', 'order']);
     }
+
+    public function musics()
+    {
+        return $this->belongsToMany(Music::class, 'albums_musics', 'id_album', 'id_music')->withPivot(['track']);
+    }
 }

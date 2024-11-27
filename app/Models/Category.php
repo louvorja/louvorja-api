@@ -15,4 +15,8 @@ class Category extends BaseModel
         'id_language',
     ];
 
+    public function albums()
+    {
+        return $this->belongsToMany(Album::class, 'categories_albums', 'id_category', 'id_album')->withPivot(['name', 'order']);
+    }
 }

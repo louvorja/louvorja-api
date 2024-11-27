@@ -9,6 +9,8 @@ use App\Helpers\Configs;
 use App\Helpers\Files;
 use App\Models\File as FileModel;
 use App\Models\Music;
+use App\Models\Category;
+use App\Models\Album;
 use App\Models\Lyric;
 use App\Models\Language;
 
@@ -84,11 +86,11 @@ class DataBase
             File::delete($file);
         }
 
-        $langs = Language::all();
-        /*foreach ($langs as $lang) {
+        $langs = Language::orderBy("id_language", "desc")->get();
+        foreach ($langs as $lang) {
             $l = $lang->id_language;
 
-            $data = Music::select([
+            /* $data = Music::select([
                 'musics.id_music',
                 'musics.name',
                 DB::raw("if(ifnull(id_file_instrumental_music,0) > 0,1,0) as has_instrumental_music"),
@@ -115,12 +117,61 @@ class DataBase
                 }])
                 ->get();
             //dd($data->toArray());
-            //echo "<pre>" . json_encode($data->toArray(), JSON_PRETTY_PRINT) . "</pre>";
-            //exit;
             $ret = self::save_file($path, $l . "_musics.json", $data->toJson());
-            $logs[] = $ret;
-        }*/
+            $logs[] = $ret;*/
 
+            /*$categories = Category::select()->where("type", "hymnal")->where("id_language", $l)->get();
+            foreach ($categories as $category) {
+                $data = Music::select([
+                    'musics.id_music',
+                    'musics.name',
+                    'albums_musics.track',
+                    DB::raw("if(ifnull(id_file_instrumental_music,0) > 0,1,0) as has_instrumental_music"),
+                    DB::raw("files_music.duration as duration"),
+                    DB::raw("(select group_concat(lyric separator ' ') from lyrics where lyrics.id_music=musics.id_music) as lyric"),
+                ])
+                    ->leftJoin('files as files_music', 'musics.id_file_music', 'files_music.id_file')
+                    ->join('albums_musics', 'albums_musics.id_music', 'musics.id_music')
+                    ->join('categories_albums', 'categories_albums.id_album', 'albums_musics.id_album')
+                    ->join('categories', 'categories.id_category', 'categories_albums.id_category')
+                    ->where("categories.id_category", $category->id_category)
+                    ->where("musics.id_language", $l)
+                    ->orderBy('albums_musics.track')
+                    ->get();
+                //dd($data->toArray());
+                $ret = self::save_file($path, $l . "_" . $category->slug . ".json", $data->toJson());
+                $logs[] = $ret;
+            }*/
+            /*
+            $data = Category::select([
+                "id_category",
+                "name",
+                "slug",
+                "order"
+            ])
+                ->where("type", "collection")->where("id_language", $l)
+                ->orderBy("order")
+                ->with(['albums' => function ($query) {
+                    $query->select([
+                        'albums.id_album',
+                        'albums.name',
+                        DB::raw("concat('/',files_image.subdirectory,files_image.file_name) as url_image"),
+                        DB::raw("categories_albums.name as subtitle"),
+                        'categories_albums.order'
+                    ])
+                        ->leftJoin('files as files_image', 'albums.id_file_image', 'files_image.id_file')
+                        ->orderBy('categories_albums.order');
+                }])
+                ->get();
+            $data->each(function ($item) {
+                $item->albums->makeHidden('pivot');
+            });
+            //dd($data->toArray());
+            $ret = self::save_file($path, $l . "_categories.json", $data->toJson());
+            $logs[] = $ret;*/
+        }
+
+        /*
         $musics = Music::select([
             'musics.id_music',
             'musics.name',
@@ -164,13 +215,43 @@ class DataBase
                 ;
             }])
             ->get();
+                    $albums->each(function ($item) {
+            $item->musics->makeHidden('pivot');
+        });
         foreach ($musics as $music) {
             $ret = self::save_file($path, "music_" . $music->id_music . ".json", $music->toJson());
             $logs[] = $ret;
         }
         //dd($musics->toJson());
-        //echo "<pre>" . json_encode($musics->toArray(), JSON_PRETTY_PRINT) . "</pre>";
-        //exit;
+*/
+
+        $albums = Album::select([
+            'albums.id_album',
+            'albums.name',
+            DB::raw("concat('/',files_image.subdirectory,files_image.file_name) as url_image"),
+        ])
+            ->leftJoin('files as files_image', 'albums.id_file_image', 'files_image.id_file')
+            ->with(['musics' => function ($query) {
+                $query->select([
+                    'musics.id_music',
+                    'musics.name',
+                    DB::raw("if(ifnull(id_file_instrumental_music,0) > 0,1,0) as has_instrumental_music"),
+                    DB::raw("files_music.duration as duration"),
+                    'albums_musics.track',
+                ])
+                    ->leftJoin('files as files_music', 'musics.id_file_music', 'files_music.id_file')
+                    ->orderBy('albums_musics.track', 'asc');
+            }])
+            ->get();
+        $albums->each(function ($item) {
+            $item->musics->makeHidden('pivot');
+        });
+        //dd($albums->toJson());
+        foreach ($albums as $album) {
+            $ret = self::save_file($path, "album_" . $album->id_album . ".json", $album->toJson());
+            $logs[] = $ret;
+        }
+
 
         return $logs;
     }
