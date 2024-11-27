@@ -155,6 +155,7 @@ class DataBase
                     $query->select([
                         'albums.id_album',
                         'albums.name',
+                        'albums.color',
                         DB::raw("concat('/',files_image.subdirectory,files_image.file_name) as url_image"),
                         DB::raw("categories_albums.name as subtitle"),
                         'categories_albums.order'
@@ -228,6 +229,7 @@ class DataBase
         $albums = Album::select([
             'albums.id_album',
             'albums.name',
+            'albums.color',
             DB::raw("concat('/',files_image.subdirectory,files_image.file_name) as url_image"),
         ])
             ->leftJoin('files as files_image', 'albums.id_file_image', 'files_image.id_file')
