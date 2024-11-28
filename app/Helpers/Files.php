@@ -17,8 +17,8 @@ class Files
         //$files = Files::take(3)->get();
         $files = FileModel::where('size', '<=', 0)->get();
         foreach ($files as $file) {
-            $url = $file["base_url"] . $file["subdirectory"] . $file["file_name"];
-            $dir = $file["base_dir"] . $file["subdirectory"] . $file["file_name"];
+            $url = env("FILES_URL") . $file["dir"] . "/" . $file["file_name"];
+            $dir = env("FILES_DIR") . $file["dir"] . "/" . $file["file_name"];
 
             $log[$file->id_file]["url"] = $url;
             $log[$file->id_file]["dir"] = $dir;
@@ -44,8 +44,8 @@ class Files
         $log = [];
         $files = FileModel::whereNull('duration')->where('type', 'music')->get();
         foreach ($files as $file) {
-            $url = $file["base_url"] . $file["subdirectory"] . $file["file_name"];
-            $dir = $file["base_dir"] . $file["subdirectory"] . $file["file_name"];
+            $url = env("FILES_URL") . $file["dir"] . "/" .  $file["file_name"];
+            $dir = env("FILES_DIR") . $file["dir"] . "/" . $file["file_name"];
 
             $log[$file->id_file]["url"] = $url;
             $log[$file->id_file]["dir"] = $dir;

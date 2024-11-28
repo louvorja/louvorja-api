@@ -89,7 +89,7 @@ class DataBase
         $langs = Language::orderBy("id_language", "desc")->get();
         foreach ($langs as $lang) {
             $l = $lang->id_language;
-
+            /*
             $data = Music::select([
                 'musics.id_music',
                 'musics.name',
@@ -170,6 +170,7 @@ class DataBase
             //dd($data->toArray());
             $ret = self::save_file($path, $l . "_categories.json", $data->toJson());
             $logs[] = $ret;
+            */
         }
 
 
@@ -204,6 +205,7 @@ class DataBase
                 $query->select([
                     'albums.id_album',
                     'albums.name',
+                    'albums_musics.track',
                     DB::raw("concat(files_image.dir,'/',files_image.file_name) as url_image"),
                     DB::raw('min(categories.order) as `order`'),
                 ])
@@ -225,7 +227,7 @@ class DataBase
         }
         //dd($musics->toJson());
 
-
+        /*
         $albums = Album::select([
             'albums.id_album',
             'albums.name',
@@ -252,7 +254,7 @@ class DataBase
         foreach ($albums as $album) {
             $ret = self::save_file($path, "album_" . $album->id_album . ".json", $album->toJson());
             $logs[] = $ret;
-        }
+        }*/
 
 
         return $logs;
