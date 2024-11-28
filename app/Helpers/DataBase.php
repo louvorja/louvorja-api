@@ -90,7 +90,7 @@ class DataBase
         foreach ($langs as $lang) {
             $l = $lang->id_language;
 
-            /* $data = Music::select([
+            $data = Music::select([
                 'musics.id_music',
                 'musics.name',
                 DB::raw("if(ifnull(id_file_instrumental_music,0) > 0,1,0) as has_instrumental_music"),
@@ -118,9 +118,9 @@ class DataBase
                 ->get();
             //dd($data->toArray());
             $ret = self::save_file($path, $l . "_musics.json", $data->toJson());
-            $logs[] = $ret;*/
+            $logs[] = $ret;
 
-            /*$categories = Category::select()->where("type", "hymnal")->where("id_language", $l)->get();
+            $categories = Category::select()->where("type", "hymnal")->where("id_language", $l)->get();
             foreach ($categories as $category) {
                 $data = Music::select([
                     'musics.id_music',
@@ -141,8 +141,8 @@ class DataBase
                 //dd($data->toArray());
                 $ret = self::save_file($path, $l . "_" . $category->slug . ".json", $data->toJson());
                 $logs[] = $ret;
-            }*/
-            /*
+            }
+
             $data = Category::select([
                 "id_category",
                 "name",
@@ -156,7 +156,7 @@ class DataBase
                         'albums.id_album',
                         'albums.name',
                         'albums.color',
-                        DB::raw("concat('/',files_image.subdirectory,files_image.file_name) as url_image"),
+                        DB::raw("concat(files_image.dir,'/',files_image.file_name) as url_image"),
                         DB::raw("categories_albums.name as subtitle"),
                         'categories_albums.order'
                     ])
@@ -169,17 +169,17 @@ class DataBase
             });
             //dd($data->toArray());
             $ret = self::save_file($path, $l . "_categories.json", $data->toJson());
-            $logs[] = $ret;*/
+            $logs[] = $ret;
         }
 
-        /*
+
         $musics = Music::select([
             'musics.id_music',
             'musics.name',
-            DB::raw("concat('/',files_image.subdirectory,files_image.file_name) as url_image"),
+            DB::raw("concat(files_image.dir,'/',files_image.file_name) as url_image"),
             DB::raw("files_image.image_position"),
-            DB::raw("concat('/',files_music.subdirectory,files_music.file_name) as url_music"),
-            DB::raw("concat('/',files_instrumental_music.subdirectory,files_instrumental_music.file_name) as url_instrumental_music"),
+            DB::raw("concat(files_music.dir,'/',files_music.file_name) as url_music"),
+            DB::raw("concat(files_instrumental_music.dir,'/',files_instrumental_music.file_name) as url_instrumental_music"),
         ])
             ->leftJoin('files as files_image', 'musics.id_file_image', 'files_image.id_file')
             ->leftJoin('files as files_music', 'musics.id_file_music', 'files_music.id_file')
@@ -190,7 +190,7 @@ class DataBase
                     'lyrics.id_music',
                     'lyrics.lyric',
                     'lyrics.aux_lyric',
-                    DB::raw("concat('/',files_image.subdirectory,files_image.file_name) as url_image"),
+                    DB::raw("concat(files_image.dir,'/',files_image.file_name) as url_image"),
                     DB::raw("files_image.image_position"),
                     'lyrics.time',
                     DB::raw('if(lyrics.instrumental_time = 0,lyrics.time,lyrics.instrumental_time) as instrumental_time'),
@@ -204,7 +204,7 @@ class DataBase
                 $query->select([
                     'albums.id_album',
                     'albums.name',
-                    DB::raw("concat('/',files_image.subdirectory,files_image.file_name) as url_image"),
+                    DB::raw("concat(files_image.dir,'/',files_image.file_name) as url_image"),
                     DB::raw('min(categories.order) as `order`'),
                 ])
                     ->leftJoin('files as files_image', 'albums.id_file_image', 'files_image.id_file')
@@ -216,21 +216,21 @@ class DataBase
                 ;
             }])
             ->get();
-                    $albums->each(function ($item) {
-            $item->musics->makeHidden('pivot');
+        $musics->each(function ($item) {
+            $item->albums->makeHidden('pivot');
         });
         foreach ($musics as $music) {
             $ret = self::save_file($path, "music_" . $music->id_music . ".json", $music->toJson());
             $logs[] = $ret;
         }
         //dd($musics->toJson());
-*/
+
 
         $albums = Album::select([
             'albums.id_album',
             'albums.name',
             'albums.color',
-            DB::raw("concat('/',files_image.subdirectory,files_image.file_name) as url_image"),
+            DB::raw("concat(files_image.dir,'/',files_image.file_name) as url_image"),
         ])
             ->leftJoin('files as files_image', 'albums.id_file_image', 'files_image.id_file')
             ->with(['musics' => function ($query) {
@@ -421,7 +421,7 @@ class DataBase
         DB::connection('sqlite')->statement("CREATE VIEW MUSICAS AS
             SELECT
                 musics.id_music ID,
-                substr(substr(files_url.subdirectory, 9), 1, length(substr(files_url.subdirectory, 9)) - 1) ALBUM,
+                substr(files_url.dir, 12, 100) ALBUM,
                 musics.name NOME,
                 files_image.name IMAGEM,
                 files_url.name URL,
@@ -476,7 +476,7 @@ class DataBase
                 musics.name NOME,
                 " . self::fn_sqlite_no_accents("musics.name") . " AS NOME_SEMAC,
                 printf('%03d', albums_musics.track) || ' - ' || musics.name NOME_COM,
-                substr(substr(files_url.subdirectory, 9), 1, length(substr(files_url.subdirectory, 9)) - 1) ALBUM,
+                substr(files_url.dir, 12, 100) ALBUM,
                 files_url.name URL,
                 files_url_instrumental.name URL_INSTRUMENTAL
             FROM musics
@@ -496,7 +496,7 @@ class DataBase
                 musics.name NOME,
                 " . self::fn_sqlite_no_accents("musics.name") . " AS NOME_SEMAC,
                 printf('%03d', albums_musics.track) || ' - ' || musics.name NOME_COM,
-                substr(substr(files_url.subdirectory, 9), 1, length(substr(files_url.subdirectory, 9)) - 1) ALBUM,
+                substr(files_url.dir, 12, 100) ALBUM,
                 files_url.name URL,
                 files_url_instrumental.name URL_INSTRUMENTAL
             FROM musics
@@ -1014,9 +1014,7 @@ class DataBase
                                 "file_name" => basename($slide["url_musica"]),
                                 "type" => "music",
                                 "size" => 0,
-                                "base_dir" => "/",
-                                "base_url" => "/",
-                                "subdirectory" => "/",
+                                "dir" => "/",
                                 "version" => 1,
                             ]);
                         }
@@ -1031,9 +1029,7 @@ class DataBase
                                 "file_name" => basename($slide["imagem"]),
                                 "type" => "image_music",
                                 "size" => 0,
-                                "base_dir" => "/",
-                                "base_url" => "/",
-                                "subdirectory" => "/",
+                                "dir" => "/",
                                 "version" => 1,
                             ]);
                         }
