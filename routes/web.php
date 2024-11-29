@@ -17,6 +17,8 @@ $router->get('/', function () {
     return [];
 });
 
+$router->get('/json_db/{file}', 'DatabaseJsonController@index');
+
 
 $router->group(['middleware' => 'api'], function () use ($router) {
 
