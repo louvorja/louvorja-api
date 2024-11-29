@@ -86,6 +86,14 @@ class Configs
                 $message = null;
             } else {
 
+                $version_number = self::get("version_number");
+                if ($version_number == "") {
+                    $version_number = 1;
+                } else {
+                    $version_number++;
+                }
+                self::set("version_number", $version_number++);
+
                 Config::where('key', 'latest_updated')->delete();
                 Config::create(['key' => 'latest_updated', 'type' => 'datetime', 'value' => $latestUpdatedAt]);
 
