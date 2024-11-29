@@ -81,15 +81,15 @@ class DataBase
             File::makeDirectory($path, 0755, true);
         }
 
-        $files = File::files($path);
+        /*$files = File::files($path);
         foreach ($files as $file) {
             File::delete($file);
-        }
+        }*/
 
         $langs = Language::orderBy("id_language", "desc")->get();
         foreach ($langs as $lang) {
             $l = $lang->id_language;
-            /*
+
             $data = Music::select([
                 'musics.id_music',
                 'musics.name',
@@ -170,7 +170,6 @@ class DataBase
             //dd($data->toArray());
             $ret = self::save_file($path, $l . "_categories.json", $data->toJson());
             $logs[] = $ret;
-            */
         }
 
 
@@ -227,12 +226,17 @@ class DataBase
         }
         //dd($musics->toJson());
 
-        /*
+
         $albums = Album::select([
             'albums.id_album',
             'albums.name',
             'albums.color',
             DB::raw("concat(files_image.dir,'/',files_image.file_name) as url_image"),
+            DB::raw("(
+                select group_concat(concat(type,'.',slug) separator '|') from categories
+                    inner join categories_albums on (categories_albums.id_category=categories.id_category)
+                    where categories_albums.id_album=albums.id_album
+            ) as categories"),
         ])
             ->leftJoin('files as files_image', 'albums.id_file_image', 'files_image.id_file')
             ->with(['musics' => function ($query) {
@@ -249,12 +253,13 @@ class DataBase
             ->get();
         $albums->each(function ($item) {
             $item->musics->makeHidden('pivot');
+            $item->categories = explode("|", $item->categories);
         });
         //dd($albums->toJson());
         foreach ($albums as $album) {
             $ret = self::save_file($path, "album_" . $album->id_album . ".json", $album->toJson());
             $logs[] = $ret;
-        }*/
+        }
 
 
         return $logs;
