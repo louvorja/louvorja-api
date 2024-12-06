@@ -2,11 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\Configs;
-use App\Helpers\Files;
-use App\Helpers\DataBase;
-use Illuminate\Http\Request;
-
 class DatabaseJsonController extends Controller
 {
     public function __construct()

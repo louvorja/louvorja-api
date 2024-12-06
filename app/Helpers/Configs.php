@@ -10,7 +10,9 @@ class Configs
 
     public static function get($key = "")
     {
-        if ($key <> "") {
+        if (is_array($key)) {
+            $config = Config::select()->whereIn("key", $key)->get();
+        } elseif ($key <> "") {
             $config = Config::select()->where("key", $key)->get();
         } else {
             $config = Config::select()->get();
@@ -27,7 +29,7 @@ class Configs
             }
         }
 
-        if ($key <> "") {
+        if ($key <> "" && !is_array($key)) {
             $data = $data[$key] ?? null;
         }
         return $data;

@@ -86,6 +86,10 @@ class DataBase
             File::delete($file);
         }*/
 
+        $config = Configs::get(["version_number", "version", "datetime", "latest_updated"]);
+        $ret = self::save_file($path, "config.json", json_encode($config));
+        $logs[] = $ret;
+
         $langs = Language::orderBy("id_language", "desc")->get();
         foreach ($langs as $lang) {
             $l = $lang->id_language;
