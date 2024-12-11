@@ -19,7 +19,7 @@ class CreateBibleBookTable extends Migration
             $table->string('name');
             $table->tinyInteger('testament');
             $table->string('keywords')->nullable();
-            $table->string('abbreviation');
+            $table->string('abbreviation', 5);
             $table->string('id_language', 5);
             $table->timestamps();
 

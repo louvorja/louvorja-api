@@ -13,6 +13,9 @@ use App\Models\Category;
 use App\Models\Album;
 use App\Models\Lyric;
 use App\Models\Language;
+use App\Models\BibleVersion;
+use App\Models\BibleBook;
+use App\Models\BibleVerse;
 
 class DataBase
 {
@@ -174,6 +177,33 @@ class DataBase
             //dd($data->toArray());
             $ret = self::save_file($path, $l . "_categories.json", $data->toJson());
             $logs[] = $ret;
+
+            $data = BibleVersion::select([
+                "id_bible_version",
+                "name",
+                "abbreviation"
+            ])
+                ->where("id_language", $l)
+                ->orderBy("name")
+                ->get();
+            //dd($data->toArray());
+            $ret = self::save_file($path, $l . "_bible_version.json", $data->toJson());
+            $logs[] = $ret;
+
+            $data = BibleBook::select([
+                "id_bible_book",
+                "book_number",
+                "name",
+                "testament",
+                "keywords",
+                "abbreviation"
+            ])
+                ->where("id_language", $l)
+                ->orderBy("book_number")
+                ->get();
+            //dd($data->toArray());
+            $ret = self::save_file($path, $l . "_bible_book.json", $data->toJson());
+            $logs[] = $ret;
         }
 
 
@@ -265,6 +295,30 @@ class DataBase
             $logs[] = $ret;
         }
 
+        $verses = BibleVerse::select()
+            ->orderBy('id_bible_version')
+            ->orderBy('id_bible_book')
+            ->orderBy('chapter')
+            ->orderBy('verse')
+            ->get();
+
+        //dd($verses->toArray());
+        $key = "";
+        $data = [];
+        foreach ($verses as $verse) {
+            $last_key = $verse->id_bible_version . "_" . $verse->id_bible_book . "_" . $verse->chapter;
+            if ($key <> $last_key) {
+                if ($key <> "") {
+                    $ret = self::save_file($path, "bible_" . $key . ".json", json_encode($data));
+                    $logs[] = $ret;
+                }
+                $data = [];
+                $key = $last_key;
+            }
+            $data[$verse->verse] =  $verse->text;
+        }
+        $ret = self::save_file($path, "bible_" . $key . ".json", json_encode($data));
+        $logs[] = $ret;
 
         return $logs;
     }
