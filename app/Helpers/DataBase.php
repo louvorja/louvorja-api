@@ -210,6 +210,8 @@ class DataBase
         $musics = Music::select([
             'musics.id_music',
             'musics.name',
+            DB::raw("files_music.duration as duration"),
+            DB::raw("files_instrumental_music.duration as instrumental_duration"),
             DB::raw("concat(files_image.dir,'/',files_image.file_name) as url_image"),
             DB::raw("files_image.image_position"),
             DB::raw("concat(files_music.dir,'/',files_music.file_name) as url_music"),
