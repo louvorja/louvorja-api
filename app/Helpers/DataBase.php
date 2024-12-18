@@ -194,9 +194,11 @@ class DataBase
                 "id_bible_book",
                 "book_number",
                 "name",
+                "chapters",
                 "testament",
                 "keywords",
-                "abbreviation"
+                "abbreviation",
+                "color"
             ])
                 ->where("id_language", $l)
                 ->orderBy("book_number")

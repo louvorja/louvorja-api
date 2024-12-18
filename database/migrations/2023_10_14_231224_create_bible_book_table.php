@@ -17,9 +17,11 @@ class CreateBibleBookTable extends Migration
             $table->increments('id_bible_book');
             $table->integer('book_number');
             $table->string('name');
+            $table->integer('chapters');
             $table->tinyInteger('testament');
             $table->string('keywords')->nullable();
             $table->string('abbreviation', 5);
+            $table->string('color', 10);
             $table->string('id_language', 5);
             $table->timestamps();
 
