@@ -26,9 +26,9 @@ class ApiMiddleware
             }
         }
 
-        $request->limit = ($request->limit ? (int) $request->limit : 100);
+        $request->request->add(['limit' => ($request->limit ? (int) $request->limit : 100)]);
         if ($request->limit <= 0) {
-            $request->limit = 999999;
+            $request->request->add(['limit' => 999999]);
         }
 
         return $next($request);
