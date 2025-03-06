@@ -17,9 +17,12 @@ class ParamsController extends Controller
         $pt_delphi_version = Configs::get("pt_delphi_version");
         $params["versao"] = $pt_delphi_version;
         $params["versaoPT"] = $pt_delphi_version;
+        $params["version"] = $pt_delphi_version;
+        $params["pt_version"] = $pt_delphi_version;
 
         $es_delphi_version = Configs::get("es_delphi_version");
         $params["versaoES"] = $es_delphi_version;
+        $params["es_version"] = $es_delphi_version;
 
         $params["instalador"] = "setup\Output\LouvorJA_Instalador24.7.17233.35503.exe";
         $params["instaladorES"] = "setup\Output\LoorJA_Instalador21.0.20.1.exe";
