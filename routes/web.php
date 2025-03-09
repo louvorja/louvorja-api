@@ -19,11 +19,11 @@ $router->get('/', function () {
 
 $router->get('/json_db/{file}', 'DatabaseJsonController@index');
 
+$router->get('/download', 'DownloadController@index');
 
 $router->group(['middleware' => 'api'], function () use ($router) {
 
     $router->get('/params', 'ParamsController@index');
-    $router->get('/download', 'DownloadController@index');
 
     $router->group(['prefix' => 'auth'], function () use ($router) {
         $router->post('/login', 'AuthController@login');
@@ -115,8 +115,6 @@ $router->group(['middleware' => 'api'], function () use ($router) {
             return [];
         });
 
-        $router->get('/download', 'DownloadController@index');
-
         $router->get('/languages', 'LanguageController@index');
 
         $router->get('/config', 'ConfigController@index');
@@ -142,4 +140,8 @@ $router->group(['middleware' => 'api'], function () use ($router) {
 
         $router->get('/files', 'FileController@index');
     });
+});
+
+$router->group(['prefix' => '{lang}', 'middleware' =>  'lang'], function () use ($router) {
+    $router->get('/download', 'DownloadController@index');
 });
