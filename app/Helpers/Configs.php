@@ -62,7 +62,7 @@ class Configs
             $tables = DB::connection()->getDoctrineSchemaManager()->listTableNames();
 
             //Obter a data e hora da alteração mais recente
-            $exclude = ["migrations", "configs", "users"]; // Não checar essas tabelas
+            $exclude = ["migrations", "configs", "users", "download_logs"]; // Não checar essas tabelas
             $latestUpdatedAt = null;
             foreach ($tables as $table) {
                 if (in_array($table, $exclude)) {
