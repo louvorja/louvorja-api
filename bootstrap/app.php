@@ -83,7 +83,7 @@ $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
     'confirmed_pwd' => App\Http\Middleware\ConfirmedPasswordMiddleware::class,
     'access' => App\Http\Middleware\AccessMiddleware::class,
-    'redirect_url' => \App\Http\Middleware\RedirectUrlMiddleware::class,
+    'general' => \App\Http\Middleware\GeneralMiddleware::class,
 ]);
 
 /*

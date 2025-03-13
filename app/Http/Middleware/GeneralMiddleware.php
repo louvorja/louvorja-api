@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class RedirectUrlMiddleware
+class GeneralMiddleware
 {
     /**
      * Handle an incoming request.

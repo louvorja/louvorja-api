@@ -13,7 +13,7 @@
 |
  */
 
-$router->group(['middleware' => 'redirect_url'], function () use ($router) {
+$router->group(['middleware' => 'general'], function () use ($router) {
 
     $router->get('/', function () {
         return [];
