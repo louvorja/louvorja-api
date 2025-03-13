@@ -8,6 +8,7 @@
         "php": "^7.3|^8.0",
         "barryvdh/laravel-cors": "^3.0",
         "doctrine/dbal": "^3.7",
+        "firebase/php-jwt": "^6.11",
         "guzzlehttp/guzzle": "^7.9",
         "illuminate/database": "^8.83",
         "james-heinrich/getid3": "^1.9",

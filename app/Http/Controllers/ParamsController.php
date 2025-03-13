@@ -18,9 +18,9 @@ class ParamsController extends Controller
             foreach ($params as $key => $param) {
                 $text .= "$key=$param\r\n";
             }
-            return response($text, 200)->header('Content-Type', 'text/json');
+            return response($text, 200)->header('Content-Type', 'text/plain');
         } else {
-            return $params;
+            return response()->json($params);
         }
     }
 }

@@ -4,12 +4,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DownloadLog extends Model
+class FtpLog extends Model
 {
-    protected $primaryKey = 'id_downalod_log';
+    protected $table = 'ftp_logs';
+    protected $primaryKey = 'id_ftp_log';
     protected $fillable = [
+        'id_ftp',
         'version',
-        'id_language',
+        'bin_version',
+        'datetime',
+        'directory',
+        'pc_name',
+        'local_ip',
+        'ip',
+        'http_client_ip',
+        'http_x_forwarded_for',
+        'remote_addr',
+        'browser',
+        'request',
+        'id_language'
+    ];
+
+    protected $casts = [
+        'request' => 'array',
     ];
 
     protected static function boot()

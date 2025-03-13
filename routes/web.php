@@ -26,6 +26,7 @@ $router->group(['middleware' => 'general'], function () use ($router) {
     $router->group(['middleware' => 'api'], function () use ($router) {
 
         $router->get('/params', 'ParamsController@index');
+        $router->get('/ftp', 'FtpController@index');
 
         $router->group(['prefix' => 'auth'], function () use ($router) {
             $router->post('/login', 'AuthController@login');
@@ -141,6 +142,8 @@ $router->group(['middleware' => 'general'], function () use ($router) {
             $router->get('/hymnal', 'HymnalController@index');
 
             $router->get('/files', 'FileController@index');
+
+            $router->get('/ftp', 'FtpController@index');
         });
     });
 

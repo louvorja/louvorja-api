@@ -3,13 +3,15 @@
 namespace App\Helpers;
 
 use App\Helpers\Configs;
-use Illuminate\Support\Facades\DB;
+use Firebase\JWT\JWT;
 
 class Params
 {
 
     public static function all()
     {
+
+        $token_ftp = JWT::encode(['exp' => time() + 180 + 18000], env('JWT_SECRET'), 'HS256');
 
         $params = [];
 
@@ -23,6 +25,8 @@ class Params
         $params["versaoES"] = $es_delphi_version; // remover depois -- adaptar no Delphi primeiro
         $params["es_version"] = $es_delphi_version;
 
+        $params["conn_ftp"] = "https://api.louvorja.com.br/ftp?token=" . $token_ftp;
+
 
         /* A partir daqui, são todos parâmetros do Delphi */
         $params["instalador"] = "setup\Output\LouvorJA_Instalador" . $pt_delphi_version . ".exe"; // Diretório FTP de onde vai buscar o instalador
@@ -32,7 +36,7 @@ class Params
         $params["formES"] = "https://louvorja.com.br/es/contacto/";
         $params["coletaneas_online"] = "https://params.louvorja.com.br/baixa_coletaneas_web.php";
         $params["embed_youtube"] = "https://www.youtube.com/embed/{videoID}";
-        $params["ftp"] = "https://params.louvorja.com.br/ftp.php";
+        $params["ftp"] = "https://api.louvorja.com.br/ftp"; // REMOVER DEPOIS PARA MANTER A FORMA SEGURA (COM TOKEN)
         $params["help"] = "https://louvorja.com.br/ajuda/";
         $params["helpPT"] = "https://louvorja.com.br/ajuda/";
         $params["helpES"] = "https://louvorja.com.br/es/ayuda/";
