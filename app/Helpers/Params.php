@@ -11,7 +11,7 @@ class Params
     public static function all()
     {
 
-        $token_ftp = JWT::encode(['exp' => time() + 180 + 18000], env('JWT_SECRET'), 'HS256');
+        $token_ftp = JWT::encode(['exp' => time() + 60], env('JWT_SECRET'), 'HS256');
 
         $params = [];
 
