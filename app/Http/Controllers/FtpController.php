@@ -77,19 +77,18 @@ class FtpController extends Controller
 
         $request->request->remove('limit');
         if ($request->data) {
-            $p = base64_decode($request->data);
-            $data["id_language"] = strtolower($p["lang"] ?? $ftp->id_language);
+            parse_str(base64_decode($request->data), $p);
+            $data["id_language"] = strtolower($p["lang"] ?? "") ?: $ftp->id_language;
             $data["version"] = $p["version"] ?? "";
             $data["bin_version"] = $p["bin_version"] ?? "";
-            $data["datetime"] = $p["datetime"] ?? "";
+            $data["datetime"] = $p["datetime"] ?? null;
             $data["ip"] = $p["ip"] ?? "";
             $data["directory"] = $p["directory"] ?? "";
             $data["pc_name"] = $p["pc_name"] ?? "";
         } elseif ($request->p) {
             //RETROCOMPATIBILIDADE
-            $p = base64_decode($request->p);
-
-            $data["id_language"] = strtolower($p["lang"] ?? $ftp->id_language);
+            parse_str(base64_decode($request->p), $p);
+            $data["id_language"] = strtolower($p["lang"] ?? "") ?: $ftp->id_language;
             $data["version"] = $p["versao"] ?? "";
             $data["bin_version"] = $p["versao_exe"] ?? "";
             $data["datetime"] = $p["datahora"] ?? null;
