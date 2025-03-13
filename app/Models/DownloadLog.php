@@ -11,4 +11,22 @@ class DownloadLog extends Model
         'version',
         'id_language',
     ];
+
+
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($query) {
+            $query->ip = request()->ip();
+            $query->http_client_ip = request()->server('HTTP_CLIENT_IP');
+            $query->http_x_forwarded_for = request()->server('HTTP_X_FORWARDED_FOR');
+            $query->remote_addr = request()->server('REMOTE_ADDR');
+            $query->browser = request()->userAgent();
+        });
+    }
 }

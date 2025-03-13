@@ -16,6 +16,11 @@ class DownloadLogs extends Migration
         Schema::create('download_logs', function (Blueprint $table) {
             $table->increments('id_download_log');
             $table->string('version', 20);
+            $table->string('ip', 20)->nullable();
+            $table->string('http_client_ip', 20)->nullable();
+            $table->string('http_x_forwarded_for', 20)->nullable();
+            $table->string('remote_addr', 20)->nullable();
+            $table->string('browser', 255)->nullable();
             $table->string('id_language', 5);
             $table->timestamps();
 

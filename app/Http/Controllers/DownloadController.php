@@ -11,7 +11,7 @@ class DownloadController extends Controller
 {
     public function index(Request $request)
     {
-        $id_language = $request->id_language ?? "pt";
+        $id_language = strtolower($request->id_language ?? $request->query('lang') ?? "pt");
         $params = Params::all();
 
         $version = $params[$id_language . "_version"];
