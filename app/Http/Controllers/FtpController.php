@@ -61,6 +61,7 @@ class FtpController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Token inválido',
+                'details' => $e
             ], 401);
         }
     }
@@ -69,12 +70,34 @@ class FtpController extends Controller
     {
         $ftp = Ftp::find($id_ftp);
 
-        $request->request->remove('limit');
-
-        FtpLog::create([
+        $data = [
             'id_language' => $ftp->id_language,
             'request' => $request->toArray(),
-        ]);
-        //dd($id_ftp, $request->toArray());
+        ];
+
+        $request->request->remove('limit');
+        if ($request->data) {
+            $p = base64_decode($request->data);
+            $data["id_language"] = strtolower($p["lang"] ?? $ftp->id_language);
+            $data["version"] = $p["version"] ?? "";
+            $data["bin_version"] = $p["bin_version"] ?? "";
+            $data["datetime"] = $p["datetime"] ?? "";
+            $data["ip"] = $p["ip"] ?? "";
+            $data["directory"] = $p["directory"] ?? "";
+            $data["pc_name"] = $p["pc_name"] ?? "";
+        } elseif ($request->p) {
+            //RETROCOMPATIBILIDADE
+            $p = base64_decode($request->p);
+
+            $data["id_language"] = strtolower($p["lang"] ?? $ftp->id_language);
+            $data["version"] = $p["versao"] ?? "";
+            $data["bin_version"] = $p["versao_exe"] ?? "";
+            $data["datetime"] = $p["datahora"] ?? null;
+            $data["ip"] = $p["ip"] ?? "";
+            $data["directory"] = $p["dir"] ?? "";
+            $data["pc_name"] = $p["nome"] ?? "";
+        }
+
+        FtpLog::create($data);
     }
 }
