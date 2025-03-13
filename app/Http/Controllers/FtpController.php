@@ -71,6 +71,7 @@ class FtpController extends Controller
         $ftp = Ftp::find($id_ftp);
 
         $data = [
+            'id_ftp' => $ftp->id_ftp,
             'id_language' => $ftp->id_language,
             'request' => $request->toArray(),
         ];
