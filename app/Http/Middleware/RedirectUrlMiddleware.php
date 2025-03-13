@@ -16,9 +16,13 @@ class RedirectUrlMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
+        $userAgent = $request->header('User-Agent');
+        if (str_contains($userAgent, 'bot') || str_contains($userAgent, 'crawler')) {
+            return response('Access denied for bots', 403);
+        }
+
         $host = $request->getHost();
         $path = $request->path();
-        $port = $request->getPort();
 
         $host_parts = explode(".", $host);
         $subdomain = $host_parts[0];
