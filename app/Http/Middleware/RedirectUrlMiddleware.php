@@ -18,9 +18,17 @@ class RedirectUrlMiddleware
     {
         $host = $request->getHost();
         $path = $request->path();
+        $port = $request->getPort();
 
-        // Verifica se a requisição veio de download.louvorja.com.br
-        if ($host === 'download.louvorja.com.br') {
+        $host_parts = explode(".", $host);
+        $subdomain = $host_parts[0];
+        if ($subdomain === 'www') {
+            array_shift($host_parts);
+            $subdomain = $host_parts[0];
+        }
+
+        // Verifica a requisição da url
+        if ($subdomain !== 'api' && $subdomain !== 'localhost') {
             $locale = 'pt'; // Idioma padrão
 
             // Verifica se a URL contém um segmento de idioma (ex: /es)
@@ -29,7 +37,7 @@ class RedirectUrlMiddleware
             }
 
             // Redireciona para a URL correta na API
-            return redirect("https://api.louvorja.com.br/{$locale}/download");
+            return redirect("https://api.louvorja.com.br/{$locale}/{$subdomain}");
         }
 
         return $next($request);
