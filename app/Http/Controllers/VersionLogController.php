@@ -20,7 +20,24 @@ class VersionLogController extends Controller
 
         $url = 'https://github.com/louvorja/desktop/releases/tag/v' . $version_software;
 
+        $client = new \GuzzleHttp\Client();
+        $response = $client->get($url);
+        $body = $response->getBody()->getContents();
 
-        return redirect($url);
+        $dom = new \DOMDocument();
+        libxml_use_internal_errors(true);
+        $dom->loadHTML($body);
+        libxml_clear_errors();
+
+        $xpath = new \DOMXPath($dom);
+        $divs = $xpath->query("//div[@data-pjax='true' and @data-test-selector='body-content' and @data-view-component='true']");
+        if ($divs->length > 0) {
+            $div = $divs->item(0);
+            $body = $div->ownerDocument->saveHTML($div);
+        }
+
+        echo $body;
+
+        //return redirect($url);
     }
 }
