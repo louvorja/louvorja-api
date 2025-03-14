@@ -19,7 +19,7 @@ class VersionLogController extends Controller
         $version_software = $version_array[0] . "." . $version_array[1];
 
         $url = 'https://github.com/louvorja/desktop/releases/tag/v' . $version_software;
-
+        /*
         $client = new \GuzzleHttp\Client();
         $response = $client->get($url);
         $body = $response->getBody()->getContents();
@@ -37,7 +37,8 @@ class VersionLogController extends Controller
         }
 
         echo $body;
-
+*/
+        echo "EM BREVE";
         //return redirect($url);
     }
 }
