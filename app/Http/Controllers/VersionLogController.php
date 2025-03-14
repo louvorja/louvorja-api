@@ -7,7 +7,7 @@ use App\Models\DownloadLog;
 use Illuminate\Http\Request;
 
 
-class VersionLogControllerController extends Controller
+class VersionLogController extends Controller
 {
     public function index(Request $request)
     {
