@@ -24,10 +24,6 @@ class Params
             $id_language = $lang->id_language;
 
             $version = Configs::get($id_language . "_delphi_version");
-            if ($lang->id_language == "pt") {
-                $params["versao"] = $version; // remover depois -- adaptar no Delphi primeiro
-                $params["instalador"] = "setup\Output\LouvorJA_Instalador" . $version . ".exe"; // remover depois -- adaptar no Delphi primeiro
-            }
             $params["versao" . strtoupper($id_language)] = $version; // remover depois -- adaptar no Delphi primeiro
             $params["instalador" . strtoupper($id_language)] = "setup\Output\\" . $file_name[$id_language] . $version . ".exe"; // remover depois -- adaptar no Delphi primeiro
 
@@ -38,6 +34,14 @@ class Params
             $params[$id_language . "_version_software"] = $version_software;
 
             $params[$id_language . "_download"] = "https://github.com/louvorja/desktop/releases/download/v" . $version_software . "/" . $file_name[$id_language] . $version . ".exe";
+            $params["download" . strtoupper($id_language)] = $params[$id_language . "_download"]; // remover depois -- adaptar no Delphi primeiro
+
+
+            if ($lang->id_language == "pt") {
+                $params["versao"] = $version; // remover depois -- adaptar no Delphi primeiro
+                $params["instalador"] = $params["instalador" . strtoupper($id_language)]; // remover depois -- adaptar no Delphi primeiro
+                $params["download"] = $params["download" . strtoupper($id_language)]; // remover depois -- adaptar no Delphi primeiro
+            }
         }
 
         $token_ftp = JWT::encode(['exp' => time() + 60], env('JWT_SECRET'), 'HS256');
