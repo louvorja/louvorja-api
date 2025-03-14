@@ -14,21 +14,9 @@ class DownloadController extends Controller
         $id_language = strtolower($request->id_language ?? $request->query('lang') ?? "pt");
         $params = Params::all();
 
-        $version = $params[$id_language . "_version"];
+        $url = $params[$id_language . "_download"];
 
-        $version_array = explode(".", $version);
-        $version_software = $version_array[0] . "." . $version_array[1];
-
-        $name = "";
-        if ($id_language == "pt") {
-            $name = "LouvorJA_Instalador" . $version . ".exe";
-        } elseif ($id_language == "es") {
-            $name = "LoorJA_Instalador" . $version . ".exe";
-        }
-
-        $url = "https://github.com/louvorja/desktop/releases/download/v" . $version_software . "/" . $name;
-
-        DownloadLog::create(['version' => $version, 'id_language' => $id_language]);
+        DownloadLog::create(['version' => $params[$id_language . "_version"], 'id_language' => $id_language]);
 
         return redirect($url);
     }
