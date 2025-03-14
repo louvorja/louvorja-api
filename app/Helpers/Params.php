@@ -33,7 +33,8 @@ class Params
             $version_software = $version_array[0] . "." . $version_array[1];
             $params[$id_language . "_version_software"] = $version_software;
 
-            $params[$id_language . "_download"] = "https://github.com/louvorja/desktop/releases/download/v" . $version_software . "/" . $file_name[$id_language] . $version . ".exe";
+            $params["setup_name" . strtoupper($id_language)] = $file_name[$id_language] . $version . ".exe"; // remover depois -- adaptar no Delphi primeiro
+            $params[$id_language . "_download"] = "https://github.com/louvorja/desktop/releases/download/v" . $version_software . "/" . $params["setup_name" . strtoupper($id_language)];
             $params["download" . strtoupper($id_language)] = $params[$id_language . "_download"]; // remover depois -- adaptar no Delphi primeiro
 
 
@@ -41,6 +42,7 @@ class Params
                 $params["versao"] = $version; // remover depois -- adaptar no Delphi primeiro
                 $params["instalador"] = $params["instalador" . strtoupper($id_language)]; // remover depois -- adaptar no Delphi primeiro
                 $params["download"] = $params["download" . strtoupper($id_language)]; // remover depois -- adaptar no Delphi primeiro
+                $params["setup_name"] = $params["setup_name" . strtoupper($id_language)]; // remover depois -- adaptar no Delphi primeiro
             }
         }
 
