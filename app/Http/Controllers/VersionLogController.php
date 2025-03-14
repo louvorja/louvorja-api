@@ -11,7 +11,7 @@ class VersionLogController extends Controller
 {
     public function index(Request $request)
     {
-        dd("EM BREVE");
+        dd("EM BREVE", $request->all());
 
         return redirect($url);
     }
