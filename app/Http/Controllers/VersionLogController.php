@@ -22,7 +22,7 @@ class VersionLogController extends Controller
 
         $response = \Illuminate\Support\Facades\Http::get($url);
         $body = $response->getBody()->getContents();
-        dd($body);/*
+
         $dom = new \DOMDocument();
         libxml_use_internal_errors(true);
         $dom->loadHTML($body);
@@ -34,7 +34,7 @@ class VersionLogController extends Controller
             $div = $divs->item(0);
             $body = $div->ownerDocument->saveHTML($div);
         }
-*/
+
         //echo $body;
 
         echo "EM BREVE2";
