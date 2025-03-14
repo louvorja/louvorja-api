@@ -22,7 +22,7 @@ class VersionLogController extends Controller
 
         $client = new \GuzzleHttp\Client();
         $response = $client->get($url);
-        $body = $response->getBody()->getContents();
+        /*     $body = $response->getBody()->getContents();
 
         $dom = new \DOMDocument();
         libxml_use_internal_errors(true);
@@ -35,7 +35,7 @@ class VersionLogController extends Controller
             $div = $divs->item(0);
             $body = $div->ownerDocument->saveHTML($div);
         }
-
+*/
         //echo $body;
 
         echo "EM BREVE2";
