@@ -21,6 +21,7 @@ class VersionLogController extends Controller
         $url = 'https://github.com/louvorja/desktop/releases/tag/v' . $version_software;
 
         $response = \Illuminate\Support\Facades\Http::get($url);
+        dd($response);
         /*     $body = $response->getBody()->getContents();
 
         $dom = new \DOMDocument();
