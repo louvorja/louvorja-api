@@ -24,8 +24,16 @@ class VersionLogController extends Controller
         $response = \Illuminate\Support\Facades\Http::get($url);
         $api = json_decode($response->getBody()->getContents(), true);
 
-        dd($url, $api["body"]);
+        $html = "<html>";
+        $html .= "<head>";
+        $html .= "<link href=\"https://fonts.googleapis.com/css?family=Roboto:400,500,700\" rel=\"stylesheet\">";
+        $html .= "<style>body { padding: 20px; font-family: 'Roboto', sans-serif; color: #666; }</style>";
+        $html .= "</head>";
+        $html .= "<body>";
+        $html .= "<h1>$version</h1>";
+        $html .= $api["body"];
+        $html .= "</body></html>";
 
-        //return redirect($url);
+        return $html;
     }
 }
