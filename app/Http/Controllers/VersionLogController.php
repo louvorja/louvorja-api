@@ -23,7 +23,9 @@ class VersionLogController extends Controller
         $response = \Illuminate\Support\Facades\Http::get($url);
         $api = json_decode($response->getBody()->getContents(), true);
 
-        dd($api);
+        if (array_key_exists("status", $api) && $api["status"] == 404) {
+            $api["body"] = "Não foi possivel encontrar informações sobre a versão $version!";
+        }
 
         $html = "<html>";
         $html .= "<head>";
