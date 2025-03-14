@@ -26,6 +26,7 @@ class Params
         $params["es_version"] = $es_delphi_version;
 
         $params["conn_ftp"] = "https://api.louvorja.com.br/ftp?token=" . $token_ftp;
+        $params["download"] = "https://api.louvorja.com.br/download";
         $params["version_log"] = "https://api.louvorja.com.br/version_log";
 
 
