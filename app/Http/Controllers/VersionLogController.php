@@ -18,8 +18,9 @@ class VersionLogController extends Controller
         $version_array = explode(".", $version);
         $version_software = $version_array[0] . "." . $version_array[1];
 
-        $client = new \GuzzleHttp\Client();
-        $response = $client->get('https://api.github.com/repos/louvorja/desktop/releases/tags/v' . $version_software);
+        $url = 'https://api.github.com/repos/louvorja/desktop/releases/tags/v' . $version_software;
+
+        $response = \Illuminate\Support\Facades\Http::get($url);
         $body = $response->getBody()->getContents();
 
         dd($body);
