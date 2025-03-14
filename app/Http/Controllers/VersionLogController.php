@@ -18,24 +18,11 @@ class VersionLogController extends Controller
         $version_array = explode(".", $version);
         $version_software = $version_array[0] . "." . $version_array[1];
 
-        $url = 'https://github.com/louvorja/desktop/releases/tag/v' . $version_software;
-
-        $response = \Illuminate\Support\Facades\Http::get($url);
+        $client = new \GuzzleHttp\Client();
+        $response = $client->get('https://api.github.com/repos/louvorja/desktop/releases/tags/v' . $version_software);
         $body = $response->getBody()->getContents();
 
-        $dom = new \DOMDocument();
-        libxml_use_internal_errors(true);
-        $dom->loadHTML($body);
-        libxml_clear_errors();
-
-        $xpath = new \DOMXPath($dom);
-        $divs = $xpath->query("//div[@data-pjax='true' and @data-test-selector='body-content' and @data-view-component='true']");
-        if ($divs->length > 0) {
-            $div = $divs->item(0);
-            $body = $div->ownerDocument->saveHTML($div);
-        }
-
-        echo $body;
+        dd($body);
 
         //return redirect($url);
     }
