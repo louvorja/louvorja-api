@@ -23,7 +23,7 @@ class VersionLogController extends Controller
         $response = \Illuminate\Support\Facades\Http::get($url);
         $body = $response->getBody()->getContents();
 
-        dd($body);
+        dd($url, $body);
 
         //return redirect($url);
     }
