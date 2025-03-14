@@ -35,9 +35,8 @@ class VersionLogController extends Controller
             $body = $div->ownerDocument->saveHTML($div);
         }
 
-        //echo $body;
+        echo $body;
 
-        echo "EM BREVE2";
         //return redirect($url);
     }
 }
