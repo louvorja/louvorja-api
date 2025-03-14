@@ -22,9 +22,9 @@ class VersionLogController extends Controller
         $url = 'https://api.github.com/repos/louvorja/desktop/releases/tags/v' . $version_software;
 
         $response = \Illuminate\Support\Facades\Http::get($url);
-        $body = json_decode($response->getBody()->getContents(), true);
+        $api = json_decode($response->getBody()->getContents(), true);
 
-        dd($url, $body->body);
+        dd($url, $api["body"]);
 
         //return redirect($url);
     }
