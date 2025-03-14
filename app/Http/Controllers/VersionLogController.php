@@ -18,7 +18,6 @@ class VersionLogController extends Controller
         $version_array = explode(".", $version);
         $version_software = $version_array[0] . "." . $version_array[1];
 
-        $version_software = "24.8";
         $url = 'https://api.github.com/repos/louvorja/desktop/releases/tags/v' . $version_software;
 
         $response = \Illuminate\Support\Facades\Http::get($url);
