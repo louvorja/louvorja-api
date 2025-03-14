@@ -29,8 +29,7 @@ class VersionLogController extends Controller
 
         $html = "<html>";
         $html .= "<head>";
-        $html .= "<link href=\"https://fonts.googleapis.com/css?family=Roboto:400,500,700\" rel=\"stylesheet\">";
-        $html .= "<style>body { padding: 20px; font-family: 'Roboto', sans-serif; color: #666; }</style>";
+        $html .= "<style>body { padding: 20px; font-family: Arial, sans-serif; color: #666; }</style>";
         $html .= "</head>";
         $html .= "<body>";
         $html .= "<h1>$version</h1>";
