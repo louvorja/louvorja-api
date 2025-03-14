@@ -23,6 +23,8 @@ class VersionLogController extends Controller
         $response = \Illuminate\Support\Facades\Http::get($url);
         $api = json_decode($response->getBody()->getContents(), true);
 
+        dd($api);
+
         $html = "<html>";
         $html .= "<head>";
         $html .= "<link href=\"https://fonts.googleapis.com/css?family=Roboto:400,500,700\" rel=\"stylesheet\">";
