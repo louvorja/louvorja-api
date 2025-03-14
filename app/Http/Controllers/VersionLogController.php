@@ -24,7 +24,7 @@ class VersionLogController extends Controller
         $response = \Illuminate\Support\Facades\Http::get($url);
         $body = json_decode($response->getBody()->getContents(), true);
 
-        dd($url, $body);
+        dd($url, $body->body);
 
         //return redirect($url);
     }
